@@ -7,7 +7,7 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="name_text_field">Enter your name</string>
     <string name="broker_address_label">Broker Address:</string>
     <string name="steering_method_label">Steering Method:</string>
 
@@ -17,6 +17,7 @@
     <string name="button_save_settings_label">Save</string>
     <string name="temperature_label">Temperature:</string>
     <string name="timer_label">Time:</string>
+    <string name="title">Mais Maze</string>
 
 
     <string name="size_setting_default">10</string>

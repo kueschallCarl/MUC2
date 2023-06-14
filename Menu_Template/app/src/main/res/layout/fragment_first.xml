@@ -4,7 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#0C0C0C"
     tools:context=".FirstFragment">
+
+    <EditText
+        android:id="@+id/broker_address_text_field2"
+        android:layout_width="199dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="408dp"
+        android:background="#1E1E1E"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/name_text_field"
+        android:textAlignment="center"
+        android:textColor="#ECECEC"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -19,23 +35,34 @@
         app:layout_constraintVertical_bias="0.976"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
-    <TextView
-        android:id="@+id/textview_first"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_first_fragment"
-        app:layout_constraintBottom_toTopOf="@id/button_first"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/button_first"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/colorEmptyCell"
         android:text="@string/next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_first" />
+        app:layout_constraintTop_toBottomOf="@+id/broker_address_text_field2" />
+
+    <EditText
+        android:id="@+id/title_text"
+        style="@style/Widget.AppCompat.EditText"
+        android:layout_width="258dp"
+        android:layout_height="98dp"
+        android:background="#1E1E1E"
+        android:clickable="false"
+        android:ems="10"
+        android:fontFamily="serif"
+        android:inputType="text"
+        android:text="@string/title"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#FFC107"
+        android:textSize="48sp"
+        app:layout_constraintBottom_toTopOf="@+id/broker_address_text_field2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
