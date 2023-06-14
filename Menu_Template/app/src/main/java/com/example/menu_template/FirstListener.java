@@ -17,7 +17,7 @@ public class FirstListener implements MqttCallbackListener {
     @Override
     public void onMessageReceived(String topic, String message) {
         if (topic.equals(Constants.TEMP_TOPIC)) {
-            Log.d("tempFirstListener", "In first listener" + message);
+            //Log.d("tempFirstListener", "In first listener" + message);
         }
     }
 

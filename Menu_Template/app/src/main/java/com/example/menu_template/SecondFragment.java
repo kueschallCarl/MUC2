@@ -55,10 +55,10 @@ public class SecondFragment extends Fragment {
         } catch (Exception e) {
             Log.d("SteeringMethod", "Issue calling the getSteeringMethod(): " + e);
         }
-        //gameLogic = new GameLogic(requireContext(), settingsDatabase);
+        gameLogic = new GameLogic(requireContext(), settingsDatabase);
         SecondListener secondListener = new SecondListener(requireContext());
         FirstListener firstListener = new FirstListener(requireContext());
-        // startGameLoop(steeringMethod);
+        startGameLoop(steeringMethod);
     }
 
     public void startGameLoop(String steeringMethod) {

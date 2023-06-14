@@ -16,8 +16,9 @@ public class SecondListener implements MqttCallbackListener {
     @Override
     public void onMessageReceived(String topic, String message) {
         if (topic.equals(Constants.MPU_TOPIC)) {
-            Log.d("MPUFirstListener", "In first listener" + message);
-        }    }
+            //Log.d("MPUFirstListener", "In first listener" + message);
+        }
+    }
 
     @Override
     public void onConnectionLost() {

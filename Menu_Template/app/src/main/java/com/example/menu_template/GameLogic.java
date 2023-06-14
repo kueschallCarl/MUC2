@@ -11,12 +11,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
-public class GameLogic {
+public class GameLogic implements MqttCallbackListener {
 
     public MqttManager mqttManager;
     private Context context;
     private SettingsDatabase settingsDatabase;
-    private SecondListener secondListener;
     public final ESPSteering espSteering;
     public final PhoneSteering phoneSteering;
     public int[][] labyrinth;
@@ -50,22 +49,20 @@ public class GameLogic {
         this.context = context;
         handler = new Handler();
         this.mqttManager = new MqttManager("game_logic");
+        this.settingsDatabase = SettingsDatabase.getInstance(context);
 
-        secondListener = new SecondListener();
-        mqttManager.setCallbackListener(secondListener);
         mqttManager.connect(settingsDatabase, "game_logic");
+        mqttManager.setCallbackListener(this);
+        mqttManager.subscribeToTopic(Constants.TEMP_TOPIC);
 
         this.espSteering = new ESPSteering(context);
         this.phoneSteering = new PhoneSteering(context);
-        this.settingsDatabase = SettingsDatabase.getInstance(context);
 
         this.playTime = 0;
         this.temperature =0;
         this.size = Integer.parseInt(settingsDatabase.getSetting(SettingsDatabase.COLUMN_LABYRINTH_SIZE));
 
-
         mqttManager.publishToTopic("0", Constants.FINISHED_TOPIC);
-        mqttManager.subscribeToTopic(Constants.TEMP_TOPIC);
 
         try {
             generateLabyrinth();
@@ -77,11 +74,11 @@ public class GameLogic {
 
 
 
-    private class SecondListener implements MqttCallbackListener {
+
         @Override
         public void onMessageReceived(String topic, String message) {
             if (topic.equals(Constants.TEMP_TOPIC)) {
-                Log.d(Constants.TEMP_TOPIC, message);
+                Log.d("temp/K05 in GameLogic", message);
                 parseTemperature(message);
             }
         }
@@ -101,7 +98,7 @@ public class GameLogic {
             showAlert("Connection Error", "Failed to connect to the MQTT broker at: " +
                     mqttManager.MQTT_BROKER_METHOD+"://"+mqttManager.MQTT_BROKER_IP+":"+mqttManager.MQTT_BROKER_PORT);
         }
-    }
+
 
     public void parseTemperature(String message){
         this.temperature = Float.parseFloat(message);
@@ -127,10 +124,6 @@ public class GameLogic {
     }
 
     public boolean gameStep(String steeringType) {
-        Log.d("gameLoop", "Game Loop started");
-        startSensors(steeringType);
-        Log.d("gameLoop", "Sensors started");
-
         int playerDirection = getPlayerDirection(steeringType);
         Log.d("playerDirection", String.valueOf(playerDirection));
         labyrinth = movePlayer(labyrinth, playerDirection);

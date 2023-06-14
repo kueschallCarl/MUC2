@@ -22,7 +22,7 @@ import java.util.Arrays;
  * This class parses the ESP32's Accelerometer/Gyro-Value-Strings received through the MPU_TOPIC,
  * so that the GameLogic Class can access that data to calculate game-physics etc.
  */
-public class ESPSteering{
+public class ESPSteering implements MqttCallbackListener{
 
     private MqttManager mqttManager;
     private Context context;
@@ -33,14 +33,14 @@ public class ESPSteering{
     private float gyro_y;
     private float gyro_z;
 
-    private FirstListener firstListener;
-
+    private SettingsDatabase settingsDatabase;
     public ESPSteering(Context context) {
         this.context = context;
         this.mqttManager = new MqttManager("esp_steering");
-
-        firstListener = new FirstListener();
-        mqttManager.setCallbackListener(firstListener);
+        this.settingsDatabase = SettingsDatabase.getInstance(context);
+        mqttManager.connect(settingsDatabase, "esp_steering");
+        mqttManager.setCallbackListener(this);
+        mqttManager.subscribeToTopic(Constants.MPU_TOPIC);
     }
 
 
@@ -53,12 +53,11 @@ public class ESPSteering{
 
     }
 
-    private class FirstListener implements MqttCallbackListener {
         @Override
         public void onMessageReceived(String topic, String message) {
             if (topic.equals(Constants.MPU_TOPIC)) {
                 parseAndAssignValues(message);
-                Log.d(Constants.MPU_TOPIC, message);
+                Log.d("mpu/K05 in ESPSteering", message);
             }
         }
 
@@ -77,7 +76,7 @@ public class ESPSteering{
             showAlert("Connection Error", "Failed to connect to the MQTT broker at: " +
                     mqttManager.MQTT_BROKER_METHOD+"://"+mqttManager.MQTT_BROKER_IP+":"+mqttManager.MQTT_BROKER_PORT);
         }
-    }
+
 
 
 
