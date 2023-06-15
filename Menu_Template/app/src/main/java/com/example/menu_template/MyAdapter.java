@@ -18,17 +18,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView playerNameTextView;
-        public TextView timeTextView;
-        public TextView scoreTextView;
-        public TextView maisCountTextView;
+        public TextView rowTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            playerNameTextView = itemView.findViewById(R.id.player_name_text_view);
-            timeTextView = itemView.findViewById(R.id.time_text_view);
-            scoreTextView = itemView.findViewById(R.id.score_text_view);
-            maisCountTextView = itemView.findViewById(R.id.mais_count_text_view);
+            rowTextView = itemView.findViewById(R.id.row_text_view);
         }
     }
 
@@ -43,10 +37,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DatabaseRow rowData = rowDataList.get(position);
-        holder.playerNameTextView.setText(rowData.getPlayerName());
-        holder.timeTextView.setText(rowData.getTime());
-        holder.scoreTextView.setText(rowData.getScore());
-        holder.maisCountTextView.setText(rowData.getMaisCount());
+        holder.rowTextView.setText(rowData.getRowData());
     }
 
     @Override
