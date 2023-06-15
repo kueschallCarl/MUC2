@@ -54,8 +54,6 @@ public class SecondFragment extends Fragment {
             Log.d("SteeringMethod", "Issue calling the getSteeringMethod(): " + e);
         }
         gameLogic = new GameLogic(requireContext(), settingsDatabase);
-        SecondListener secondListener = new SecondListener(requireContext());
-        FirstListener firstListener = new FirstListener(requireContext());
         startGameLoop(steeringMethod);
     }
 
@@ -72,6 +70,7 @@ public class SecondFragment extends Fragment {
                 win_condition = gameLogic.gameStep(steeringMethod);
                 drawLabyrinth(gameLogic.labyrinth);
                 if (win_condition) {
+                    gameLogic.mqttManager.publishToTopic("1",Constants.FINISHED_TOPIC);
                     gameLogic.setGameRunning(false);
                     break;
                 }

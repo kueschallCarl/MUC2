@@ -9,13 +9,13 @@
         android:id="@+id/broker_address_label"
         android:layout_width="181dp"
         android:layout_height="28dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="16dp"
         android:text="@string/broker_address_label"
-        android:textAlignment="textEnd"
-        android:textSize="18sp"
+        android:textAlignment="center"
+        android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/broker_address_text_field"
-        app:layout_constraintHorizontal_bias="0.526"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,29 +23,31 @@
         android:id="@+id/steering_method_label"
         android:layout_width="181dp"
         android:layout_height="28dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/steering_method_label"
-        android:textAlignment="textEnd"
-        android:textSize="18sp"
+        android:textAlignment="center"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/radio_btn_group_steering_method"
-        app:layout_constraintHorizontal_bias="0.206"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/broker_address_label"
-        app:layout_constraintVertical_bias="0.103" />
+        app:layout_constraintVertical_bias="0.112" />
 
     <TextView
         android:id="@+id/size_setting_label"
-        android:layout_width="181dp"
-        android:layout_height="28dp"
+        android:layout_width="191dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/size_setting_label"
-        android:textAlignment="textEnd"
-        android:textSize="18sp"
+        android:textAlignment="center"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/size_setting"
-        app:layout_constraintHorizontal_bias="0.222"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/steering_method_label"
-        app:layout_constraintVertical_bias="0.29"
+        app:layout_constraintVertical_bias="0.258"
         tools:text="@string/size_setting_label" />
 
     <EditText
@@ -71,7 +73,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button_save_settings"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radio_btn_group_steering_method"
-        app:layout_constraintVertical_bias="0.59" />
+        app:layout_constraintVertical_bias="0.363" />
 
     <RadioGroup
         android:id="@+id/radio_btn_group_steering_method"

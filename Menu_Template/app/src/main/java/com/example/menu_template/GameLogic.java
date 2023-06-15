@@ -61,6 +61,9 @@ public class GameLogic implements MqttCallbackListener {
         this.playTime = 0;
         this.temperature =0;
         this.size = Integer.parseInt(settingsDatabase.getSetting(SettingsDatabase.COLUMN_LABYRINTH_SIZE));
+        if(this.size < 10){
+            this.size = 10;
+        }
 
         mqttManager.publishToTopic("0", Constants.FINISHED_TOPIC);
 
