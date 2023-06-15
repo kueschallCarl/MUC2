@@ -22,6 +22,7 @@ import com.example.menu_template.SettingsDatabase;
 import com.example.menu_template.SettingsFragment;
 import com.example.menu_template.databinding.FragmentSecondBinding;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SecondFragment extends Fragment {
@@ -105,6 +106,7 @@ public class SecondFragment extends Fragment {
 
 
     public void drawLabyrinth(int[][] labyrinth) {
+        Log.d("labyrinth in draw labyrinth", Arrays.deepToString(labyrinth));
         int cellSize = 50;
         int width = labyrinth.length * cellSize;
         int height = labyrinth[0].length * cellSize;
@@ -120,6 +122,9 @@ public class SecondFragment extends Fragment {
 
         Paint startPaint = new Paint();
         startPaint.setColor(ContextCompat.getColor(requireContext(), R.color.colorStart));
+
+        Paint maisPaint = new Paint();
+        maisPaint.setColor(ContextCompat.getColor(requireContext(), R.color.colorMais));
 
         Paint endPaint = new Paint();
         endPaint.setColor(ContextCompat.getColor(requireContext(), R.color.colorEnd));
@@ -144,6 +149,9 @@ public class SecondFragment extends Fragment {
                         break;
                     case 3:
                         canvas.drawRect(left, top, right, bottom, endPaint);
+                        break;
+                    case 6:
+                        canvas.drawRect(left, top, right, bottom, maisPaint);
                         break;
                 }
             }

@@ -485,6 +485,8 @@ public class GameLogic implements MqttCallbackListener {
                     Log.d("Labyrinth", "Labyrinth before regen: " + Arrays.deepToString(this.labyrinth));
                     generateLabyrinth();
                 }
+                //place Mais in the finished labyrinth
+                placeMais(labyrinth);
             }
 
     private boolean hasAdjacentZeros(int x, int y) {
@@ -529,6 +531,22 @@ public class GameLogic implements MqttCallbackListener {
     private int getRandomNumber(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min + 1) + min;
+    }
+
+
+    public void placeMais(int[][] labyrinth) {
+        Random random = new Random();
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (labyrinth[i][j] == 0) {
+                    double chance = (35 - this.size) * 0.01;
+                    if (random.nextDouble() < chance) {
+                        labyrinth[i][j] = 6;
+                    }
+                }
+            }
+        }
     }
 
 

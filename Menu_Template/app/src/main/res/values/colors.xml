@@ -11,4 +11,5 @@
     <color name="colorWall">#000000</color>
     <color name="colorStart">#FF0000</color>
     <color name="colorEnd">#00FF00</color>
+    <color name="colorMais">#fcd62b</color>
 </resources>
