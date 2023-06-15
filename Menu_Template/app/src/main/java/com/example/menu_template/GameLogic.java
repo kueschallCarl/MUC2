@@ -85,8 +85,8 @@ public class GameLogic implements MqttCallbackListener {
 
         @Override
         public void onConnectionLost() {
-            // Handle connection lost
             // Show alert to the user
+            Log.d("MqttManager", "Connection lost in GameLogic");
             showAlert("Connection Lost", "The MQTT connection to "+
                     mqttManager.MQTT_BROKER_METHOD+"://"+mqttManager.MQTT_BROKER_IP+":"+mqttManager.MQTT_BROKER_PORT + "was lost.");
         }
@@ -553,5 +553,10 @@ public class GameLogic implements MqttCallbackListener {
 
     public int[][] getLabyrinth() {
         return labyrinth;
+    }
+
+    public void disconnectAllClients(){
+        mqttManager.disconnect();
+        espSteering.disconnect();
     }
 }

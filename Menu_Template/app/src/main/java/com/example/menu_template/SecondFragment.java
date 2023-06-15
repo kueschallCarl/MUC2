@@ -167,6 +167,7 @@ public class SecondFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        gameLogic.disconnectAllClients();
         binding = null;
 
         if (gameThread != null && gameThread.isAlive()) {

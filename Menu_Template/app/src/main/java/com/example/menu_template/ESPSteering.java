@@ -63,8 +63,8 @@ public class ESPSteering implements MqttCallbackListener{
 
         @Override
         public void onConnectionLost() {
-            // Handle connection lost
             // Show alert to the user
+            Log.d("MqttManager", "Connection lost in ESPSteering");
             showAlert("Connection Lost", "The MQTT connection to "+
                     mqttManager.MQTT_BROKER_METHOD+"://"+mqttManager.MQTT_BROKER_IP+":"+mqttManager.MQTT_BROKER_PORT + "was lost.");
         }
@@ -132,5 +132,9 @@ public class ESPSteering implements MqttCallbackListener{
 
     public float getGyroZ() {
         return gyro_z;
+    }
+
+    public void disconnect(){
+        mqttManager.disconnect();
     }
 }
