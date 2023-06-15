@@ -12,14 +12,24 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menu_template.databinding.FragmentFirstBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private MqttManager mqttManager;
     private SettingsDatabase settingsDatabase;
+    private RecyclerView recyclerView;
+    private LeaderboardDatabase leaderboardDatabase;
+
+    private MyAdapter adapter;
+    private List<DatabaseRow> rowDataList;
 
     /**
      * This method overrides the implementation of creating the View
@@ -44,6 +54,7 @@ public class FirstFragment extends Fragment {
     ) {
         mqttManager = new MqttManager("first_fragment");
         binding = FragmentFirstBinding.inflate(inflater, container, false);
+        this.leaderboardDatabase = LeaderboardDatabase.getInstance(requireContext());
         return binding.getRoot();
 
     }
@@ -61,6 +72,27 @@ public class FirstFragment extends Fragment {
         EditText player_name = binding.nameTextField;
         player_name.setText(settingsDatabase.getSetting(SettingsDatabase.COLUMN_PLAYER_NAME));
 
+
+        // Initialize the RecyclerView
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        // Create a list of DatabaseRowSchema objects (replace this with your actual data)
+        rowDataList = new ArrayList<>();
+        String name = leaderboardDatabase.getValue("name");
+        String time = leaderboardDatabase.getValue("time");
+        String mais_count = leaderboardDatabase.getValue("mais_count");
+        String score = leaderboardDatabase.getValue("score");
+
+        DatabaseRow row = new DatabaseRow(name, time, mais_count, score);
+        rowDataList.add(row);
+        // Add your database rows to the list
+
+        // Create the adapter and pass the list of database rows
+        adapter = new MyAdapter(rowDataList);
+
+        // Set the adapter to the RecyclerView
+        recyclerView.setAdapter(adapter);
 
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             /**
