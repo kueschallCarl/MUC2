@@ -31,10 +31,8 @@ public class SecondFragment extends Fragment {
     private String steeringMethod;
     private SettingsDatabase settingsDatabase;
     private boolean win_condition = false;
-
     private ImageView labyrinthImageView;
     private View fragmentView;
-
     private Thread gameThread;
 
     @Override
@@ -77,6 +75,7 @@ public class SecondFragment extends Fragment {
                     gameLogic.setGameRunning(false);
                     break;
                 }
+
                 try {
                     Thread.sleep(40); // Add a 100ms delay
                 } catch (InterruptedException e) {
@@ -91,14 +90,18 @@ public class SecondFragment extends Fragment {
 
     private void updateTemperatureAndPlayTime(float temperature, int play_time) {
         requireActivity().runOnUiThread(() -> {
-            EditText timeTextField = binding.timeTextField;
-            EditText temperatureTextField = binding.temperatureTextField;
+            if (binding != null) {
+                EditText timeTextField = binding.timeTextField;
+                EditText temperatureTextField = binding.temperatureTextField;
 
-            temperatureTextField.setText(String.valueOf(temperature));
-            timeTextField.setText(String.valueOf(play_time));
+                if (timeTextField != null && temperatureTextField != null) {
+                    temperatureTextField.setText(String.valueOf(temperature));
+                    timeTextField.setText(String.valueOf(play_time));
+                }
+            }
         });
-
     }
+
 
 
 
@@ -164,7 +167,6 @@ public class SecondFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        win_condition = true;
         binding = null;
 
         if (gameThread != null && gameThread.isAlive()) {
@@ -176,7 +178,9 @@ public class SecondFragment extends Fragment {
             }
         }
 
-        gameLogic.stopSensors(steeringMethod);
+        if (gameLogic != null) {
+            gameLogic.stopSensors(steeringMethod);
+        }
     }
 }
 
