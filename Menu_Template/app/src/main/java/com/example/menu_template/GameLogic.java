@@ -134,8 +134,6 @@ public class GameLogic implements MqttCallbackListener {
         labyrinth = movePlayer(labyrinth, playerDirection);
 
         if (isLabyrinthEmpty(labyrinth)) {
-
-            showAlert("YOU WIN!", "You have successfully completed the labyrinth!");
             return true;
         }
 

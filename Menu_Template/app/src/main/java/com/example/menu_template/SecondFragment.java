@@ -17,13 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.menu_template.GameLogic;
-import com.example.menu_template.SettingsDatabase;
-import com.example.menu_template.SettingsFragment;
 import com.example.menu_template.databinding.FragmentSecondBinding;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SecondFragment extends Fragment {
 
@@ -105,9 +101,7 @@ public class SecondFragment extends Fragment {
         leaderboardDatabase.updateLastSetting(String.valueOf(play_time), "time");
         leaderboardDatabase.updateLastSetting(String.valueOf(mais_count), "mais_count");
         leaderboardDatabase.updateLastSetting(String.valueOf(score), "score");
-    }
-
-    public void showScore(){
+        showAlert("YOU WIN!",  "Time: "+ play_time + " | Mais collected: "+mais_count + " | Score: " + score);
 
     }
 
@@ -187,11 +181,13 @@ public class SecondFragment extends Fragment {
     }
 
     private void showAlert(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("OK", null)
-                .show();
+        requireActivity().runOnUiThread(() -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton("OK", null)
+                    .show();
+        });
     }
 
     @Override

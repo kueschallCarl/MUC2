@@ -82,7 +82,7 @@ public class LeaderboardDatabase extends SQLiteOpenHelper {
     }
 
 
-    public String getSetting(String columnName) {
+    public String getValue(String columnName) {
         SQLiteDatabase db = getReadableDatabase();
         String selectQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1";
         Cursor cursor = db.rawQuery(selectQuery, null);
