@@ -21,6 +21,7 @@ public class GameLogic implements MqttCallbackListener {
     public int[][] labyrinth;
 
     private float temperature;
+    private int mais_count;
     private boolean gameRunning;
     private int playTime;
     private int size = 10;
@@ -59,6 +60,7 @@ public class GameLogic implements MqttCallbackListener {
         this.phoneSteering = new PhoneSteering(context);
 
         this.playTime = 0;
+        this.mais_count = 0;
         this.temperature =0;
         this.size = Integer.parseInt(settingsDatabase.getSetting(SettingsDatabase.COLUMN_LABYRINTH_SIZE));
         if(this.size < 10){
@@ -396,6 +398,12 @@ public class GameLogic implements MqttCallbackListener {
             return labyrinth;
         }
 
+        if (labyrinth[newPlayerX][newPlayerY] == 6) {
+            // Player cannot move to a wall
+            Log.d("Mais", "Mais collected at: "+ "[" + newPlayerX + "]"+ "," + "[" + newPlayerY + "]");
+            this.mais_count += 1;
+        }
+
         // Calculate the difference between the player's position and the finish's position
         int deltaX = Math.abs(newPlayerX - finishX);
         int deltaY = Math.abs(newPlayerY - finishY);
@@ -579,5 +587,9 @@ public class GameLogic implements MqttCallbackListener {
     public void disconnectAllClients(){
         mqttManager.disconnect();
         espSteering.disconnect();
+    }
+
+    public int getMaisCount() {
+        return mais_count;
     }
 }

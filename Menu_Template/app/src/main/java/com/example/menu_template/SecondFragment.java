@@ -35,6 +35,7 @@ public class SecondFragment extends Fragment {
     private ImageView labyrinthImageView;
     private View fragmentView;
     private Thread gameThread;
+    private LeaderboardDatabase leaderboardDatabase;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class SecondFragment extends Fragment {
         } catch (Exception e) {
             Log.d("SteeringMethod", "Issue calling the getSteeringMethod(): " + e);
         }
+        this.leaderboardDatabase = LeaderboardDatabase.getInstance(requireContext());
         gameLogic = new GameLogic(requireContext(), settingsDatabase);
         startGameLoop(steeringMethod);
     }
@@ -73,6 +75,7 @@ public class SecondFragment extends Fragment {
                 if (win_condition) {
                     gameLogic.mqttManager.publishToTopic("1",Constants.FINISHED_TOPIC);
                     gameLogic.setGameRunning(false);
+                    saveScore();
                     break;
                 }
 
@@ -87,6 +90,26 @@ public class SecondFragment extends Fragment {
         gameThread.start();
     }
 
+
+    public void saveScore(){
+        String name = settingsDatabase.getSetting("name");
+        int play_time = gameLogic.getPlayTime();
+        int mais_count = gameLogic.getMaisCount();
+
+        float timeWeight = -0.5f;
+        float cornWeight = 1.3f;
+
+        float score = (play_time * timeWeight) + (mais_count * cornWeight);
+
+        leaderboardDatabase.saveSetting(name, "name");
+        leaderboardDatabase.updateLastSetting(String.valueOf(play_time), "time");
+        leaderboardDatabase.updateLastSetting(String.valueOf(mais_count), "mais_count");
+        leaderboardDatabase.updateLastSetting(String.valueOf(score), "score");
+    }
+
+    public void showScore(){
+
+    }
 
     private void updateTemperatureAndPlayTime(float temperature, int play_time) {
         requireActivity().runOnUiThread(() -> {
