@@ -9,14 +9,6 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
  * This class handles MQTT connection and handles MQTT events
  */
 public class MqttManager {
-
-    private float acc_x;
-    private float acc_y;
-    private float acc_z;
-    private float gyro_x;
-    private float gyro_y;
-    private float gyro_z;
-
     // tcp://192.168.0.89:1883
     public String MQTT_BROKER_IP = "198.162.0.89";
     public String MQTT_BROKER_PORT = "1883";
