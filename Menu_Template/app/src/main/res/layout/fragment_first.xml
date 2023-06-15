@@ -8,7 +8,7 @@
     tools:context=".FirstFragment">
 
     <EditText
-        android:id="@+id/broker_address_text_field2"
+        android:id="@+id/name_text_field"
         android:layout_width="199dp"
         android:layout_height="65dp"
         android:layout_marginTop="408dp"
@@ -44,7 +44,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/broker_address_text_field2" />
+        app:layout_constraintTop_toBottomOf="@+id/name_text_field" />
 
     <EditText
         android:id="@+id/title_text"
@@ -61,7 +61,7 @@
         android:textAllCaps="false"
         android:textColor="#FFC107"
         android:textSize="48sp"
-        app:layout_constraintBottom_toTopOf="@+id/broker_address_text_field2"
+        app:layout_constraintBottom_toTopOf="@+id/name_text_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -16,7 +16,7 @@ public class SettingsDatabase extends SQLiteOpenHelper {
     public static final String COLUMN_STEERING_METHOD = "steering_method";
     public static final String COLUMN_BROKER_IP = "broker_ip";
     public static final String COLUMN_LABYRINTH_SIZE = "labyrinth_size";
-
+    public static final String COLUMN_PLAYER_NAME = "name";
 
     private static SettingsDatabase instance = null;
     private Context mContext;
@@ -37,6 +37,7 @@ public class SettingsDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createTableQuery = "CREATE TABLE " + TABLE_NAME + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_PLAYER_NAME + " TEXT, " +
                 COLUMN_STEERING_METHOD + " TEXT, " +
                 COLUMN_BROKER_IP + " TEXT, " +
                 COLUMN_LABYRINTH_SIZE + " TEXT)";

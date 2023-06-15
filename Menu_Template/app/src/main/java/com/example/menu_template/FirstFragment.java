@@ -5,24 +5,21 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.menu_template.databinding.FragmentFirstBinding;
-import com.google.android.material.snackbar.Snackbar;
-import org.eclipse.paho.client.mqttv3.*;
-import com.example.menu_template.MqttManager;
-import com.example.menu_template.MqttCallbackListener;
-import com.example.menu_template.Constants.*;
+
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private MqttManager mqttManager;
+    private SettingsDatabase settingsDatabase;
 
     /**
      * This method overrides the implementation of creating the View
@@ -59,6 +56,11 @@ public class FirstFragment extends Fragment {
      */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.settingsDatabase = SettingsDatabase.getInstance(requireContext());
+
+        EditText player_name = binding.nameTextField;
+        player_name.setText(settingsDatabase.getSetting(SettingsDatabase.COLUMN_PLAYER_NAME));
+
 
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             /**
@@ -67,10 +69,10 @@ public class FirstFragment extends Fragment {
              */
             @Override
             public void onClick(View view) {
-
+                    EditText name = binding.nameTextField;
+                    settingsDatabase.updateLastSetting(String.valueOf(name.getText()), SettingsDatabase.COLUMN_PLAYER_NAME);
                     NavHostFragment.findNavController(FirstFragment.this)
                             .navigate(R.id.action_FirstFragment_to_SecondFragment);
-
             }
         });
     }
