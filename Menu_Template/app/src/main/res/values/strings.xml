@@ -18,7 +18,7 @@
     <string name="temperature_label">Temperature:</string>
     <string name="timer_label">Time:</string>
     <string name="title">Mais Maze</string>
-
+    <string name="leaderboard_headers">Name  |  Time  |  Mais  |  Score</string>
 
     <string name="size_setting_default">10</string>
     <string name="broker_address_text_field">192.168.0.89</string>

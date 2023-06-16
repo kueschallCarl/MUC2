@@ -97,10 +97,10 @@ public class SecondFragment extends Fragment {
 
         float score = (play_time * timeWeight) + (mais_count * cornWeight);
 
-        leaderboardDatabase.saveSetting(name, "name");
-        leaderboardDatabase.updateLastSetting(String.valueOf(play_time), "time");
-        leaderboardDatabase.updateLastSetting(String.valueOf(mais_count), "mais_count");
-        leaderboardDatabase.updateLastSetting(String.valueOf(score), "score");
+        leaderboardDatabase.saveValue(name, "name");
+        leaderboardDatabase.updateLastValue(String.valueOf(play_time), "time");
+        leaderboardDatabase.updateLastValue(String.valueOf(mais_count), "mais_count");
+        leaderboardDatabase.updateLastValue(String.valueOf(score), "score");
         showAlert("YOU WIN!",  "Time: "+ play_time + " | Mais collected: "+mais_count + " | Score: " + score);
 
     }

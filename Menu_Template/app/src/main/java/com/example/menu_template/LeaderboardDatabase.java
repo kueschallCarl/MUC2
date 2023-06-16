@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LeaderboardDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "leaderboards_database";
     private static final int DATABASE_VERSION = 1;
@@ -39,7 +42,7 @@ public class LeaderboardDatabase extends SQLiteOpenHelper {
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_PLAYER_NAME + " TEXT, " +
                 COLUMN_TIME + " TEXT, " +
-                COLUMN_SCORE + " TEXT, " +
+                COLUMN_SCORE + " FLOAT, " +
                 COLUMN_MAIS_COUNT + " TEXT)";
         db.execSQL(createTableQuery);
     }
@@ -53,15 +56,20 @@ public class LeaderboardDatabase extends SQLiteOpenHelper {
         // Handle database upgrades if needed
     }
 
-    public void saveSetting(String setting, String column) {
+    public void saveValue(String value, String column) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(column, setting);
+        if (column.equals("score")) {
+            float floatValue = Float.parseFloat(value);
+            values.put(column, floatValue);
+        } else {
+            values.put(column, value);
+        }
         db.insert(TABLE_NAME, null, values);
         db.close();
     }
 
-    public void updateLastSetting(String setting, String column) {
+    public void updateLastValue(String value, String column) {
         SQLiteDatabase db = getWritableDatabase();
         String countQuery = "SELECT COUNT(*) FROM " + TABLE_NAME;
         Cursor cursor = db.rawQuery(countQuery, null);
@@ -71,11 +79,16 @@ public class LeaderboardDatabase extends SQLiteOpenHelper {
 
         if (rowCount > 0) {
             ContentValues values = new ContentValues();
-            values.put(column, setting);
+            if (column.equals("score")) {
+                float floatValue = Float.parseFloat(value);
+                values.put(column, floatValue);
+            } else {
+                values.put(column, value);
+            }
             String whereClause = COLUMN_ID + " = (SELECT MAX(" + COLUMN_ID + ") FROM " + TABLE_NAME + ")";
             db.update(TABLE_NAME, values, whereClause, null);
         } else {
-            saveSetting(setting, column);
+            saveValue(value, column);
         }
 
         db.close();
@@ -101,9 +114,49 @@ public class LeaderboardDatabase extends SQLiteOpenHelper {
         return setting;
     }
 
+    public List<LeaderboardEntry> getEntriesSortedByScore() {
+        List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_SCORE + " DESC";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        int playerNameIndex = cursor.getColumnIndex(COLUMN_PLAYER_NAME);
+        int timeIndex = cursor.getColumnIndex(COLUMN_TIME);
+        int scoreIndex = cursor.getColumnIndex(COLUMN_SCORE);
+        int maisCountIndex = cursor.getColumnIndex(COLUMN_MAIS_COUNT);
+
+
+        if (scoreIndex != -1) {
+            if (cursor.moveToFirst()) {
+                do {
+                    String playerName = cursor.getString(playerNameIndex);
+                    String time = cursor.getString(timeIndex);
+                    String score = cursor.getString(scoreIndex);
+                    String maisCount = cursor.getString(maisCountIndex);
+
+                    LeaderboardEntry entry = new LeaderboardEntry(playerName, time, score, maisCount);
+                    leaderboardEntries.add(entry);
+                } while (cursor.moveToNext());
+            }
+        } else {
+            Log.d("Error", "Column index not found for COLUMN_SCORE");
+        }
+
+        cursor.close();
+        db.close();
+
+        return leaderboardEntries;
+    }
+
+
 
     public Context getContext() {
         return mContext;
     }
+
+
+
 }
 

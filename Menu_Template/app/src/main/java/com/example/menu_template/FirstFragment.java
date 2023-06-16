@@ -1,6 +1,7 @@
 package com.example.menu_template;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,27 +73,7 @@ public class FirstFragment extends Fragment {
         EditText player_name = binding.nameTextField;
         player_name.setText(settingsDatabase.getSetting(SettingsDatabase.COLUMN_PLAYER_NAME));
 
-
-        // Initialize the RecyclerView
-        recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        // Create a list of DatabaseRowSchema objects (replace this with your actual data)
-        rowDataList = new ArrayList<>();
-        String name = leaderboardDatabase.getValue("name");
-        String time = leaderboardDatabase.getValue("time");
-        String mais_count = leaderboardDatabase.getValue("mais_count");
-        String score = leaderboardDatabase.getValue("score");
-
-        DatabaseRow row = new DatabaseRow(name, time, mais_count, score);
-        rowDataList.add(row);
-        // Add your database rows to the list
-
-        // Create the adapter and pass the list of database rows
-        adapter = new MyAdapter(rowDataList);
-
-        // Set the adapter to the RecyclerView
-        recyclerView.setAdapter(adapter);
+        fillRecyclerView();
 
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             /**
@@ -139,5 +120,37 @@ public class FirstFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
+    public void fillRecyclerView() {
+        // Create a list of DatabaseRowSchema objects
+        rowDataList = new ArrayList<>();
+
+        // Get data from the LeaderboardDatabase and sort by score
+        List<LeaderboardEntry> leaderboardEntries = leaderboardDatabase.getEntriesSortedByScore();
+
+        // Create DatabaseRow objects from leaderboard entries and add them to the rowDataList
+        for (LeaderboardEntry entry : leaderboardEntries) {
+            String name = entry.getPlayerName();
+            String time = entry.getTime();
+            String maisCount = entry.getMaisCount();
+            String score = entry.getScore();
+            Log.d("leaderboard", score);
+
+            DatabaseRow row = new DatabaseRow(name, time, maisCount, score);
+            rowDataList.add(row);
+        }
+
+        // Create the adapter and pass the list of database rows
+        adapter = new MyAdapter(rowDataList);
+
+        // Instantiate the RecyclerView and set its layout manager
+        recyclerView = requireView().findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        // Set the adapter to the RecyclerView
+        recyclerView.setAdapter(adapter);
+    }
+
 
 }

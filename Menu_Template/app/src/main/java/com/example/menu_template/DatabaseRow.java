@@ -13,23 +13,7 @@ public class DatabaseRow {
         this.time = time;
         this.score = score;
         this.maisCount = maisCount;
-        this.rowData = playerName + " | " + time + " | " + maisCount + " | " + score;
-    }
-
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public String getScore() {
-        return score;
-    }
-
-    public String getMaisCount() {
-        return maisCount;
+        this.rowData = playerName + "   |   " + time + "   |   " + maisCount + "   |   " + score;
     }
 
     public String getRowData(){

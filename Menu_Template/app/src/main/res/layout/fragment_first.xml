@@ -27,7 +27,6 @@
         android:id="@+id/button_first"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorEmptyCell"
         android:text="@string/next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,13 +59,29 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="383dp"
-        android:layout_height="269dp"
+        android:layout_width="287dp"
+        android:layout_height="237dp"
         android:background="#1E1E1E"
         app:layout_constraintBottom_toTopOf="@+id/name_text_field"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_text"
-        app:layout_constraintVertical_bias="0.528" />
+        app:layout_constraintVertical_bias="0.875" />
+
+    <EditText
+        android:id="@+id/leaderboard_headers"
+        android:layout_width="222dp"
+        android:layout_height="43dp"
+        android:background="@null"
+        android:clickable="false"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/leaderboard_headers"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_text" />
 </androidx.constraintlayout.widget.ConstraintLayout>
