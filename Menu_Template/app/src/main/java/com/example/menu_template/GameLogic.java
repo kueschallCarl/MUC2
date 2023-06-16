@@ -18,6 +18,7 @@ public class GameLogic implements MqttCallbackListener {
     private SettingsDatabase settingsDatabase;
     public final ESPSteering espSteering;
     public final PhoneSteering phoneSteering;
+    private SoundPlayer soundPlayer;
     public int[][] labyrinth;
 
     private float temperature;
@@ -51,6 +52,7 @@ public class GameLogic implements MqttCallbackListener {
         handler = new Handler();
         this.mqttManager = new MqttManager("game_logic");
         this.settingsDatabase = SettingsDatabase.getInstance(context);
+        this.soundPlayer = new SoundPlayer();
 
         mqttManager.connect(settingsDatabase, "game_logic");
         mqttManager.setCallbackListener(this);
@@ -399,6 +401,7 @@ public class GameLogic implements MqttCallbackListener {
         if (labyrinth[newPlayerX][newPlayerY] == 6) {
             // Player cannot move to a wall
             Log.d("Mais", "Mais collected at: "+ "[" + newPlayerX + "]"+ "," + "[" + newPlayerY + "]");
+            soundPlayer.playSoundEffect(context, R.raw.mais_pickup_sound);
             this.mais_count += 1;
         }
 

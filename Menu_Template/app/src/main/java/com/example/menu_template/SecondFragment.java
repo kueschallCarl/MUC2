@@ -26,6 +26,7 @@ public class SecondFragment extends Fragment {
     private FragmentSecondBinding binding;
     private GameLogic gameLogic;
     private String steeringMethod;
+    private SoundPlayer soundPlayer;
     private SettingsDatabase settingsDatabase;
     private boolean win_condition = false;
     private ImageView labyrinthImageView;
@@ -41,6 +42,7 @@ public class SecondFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.soundPlayer = new SoundPlayer();
         fragmentView = view;
 
         SettingsFragment settingsFragment = new SettingsFragment();
@@ -69,6 +71,7 @@ public class SecondFragment extends Fragment {
                 win_condition = gameLogic.gameStep(steeringMethod);
                 drawLabyrinth(gameLogic.labyrinth);
                 if (win_condition) {
+                    soundPlayer.playSoundEffect(requireContext(), R.raw.win_sound);
                     gameLogic.mqttManager.publishToTopic("1",Constants.FINISHED_TOPIC);
                     gameLogic.setGameRunning(false);
                     saveScore();
