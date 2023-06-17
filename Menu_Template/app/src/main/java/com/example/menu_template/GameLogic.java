@@ -122,6 +122,7 @@ public class GameLogic implements MqttCallbackListener {
         @Override
         public void onConnectionError(String message) {
             // Handle connection error
+            Log.d("mqttManager", "connection error in gameLogic");
             // Show alert to the user with the error message
             showAlert("Connection Error", "Failed to connect to the MQTT broker at: " +
                     mqttManager.MQTT_BROKER_METHOD+"://"+mqttManager.MQTT_BROKER_IP+":"+mqttManager.MQTT_BROKER_PORT);

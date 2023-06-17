@@ -133,6 +133,9 @@ public class MqttManager {
                 Log.d("MqttManager", "Connected to MQTT broker");
             } else {
                 Log.d("MqttManager", "Failed to connect to MQTT broker");
+                if (callbackListener != null) {
+                    callbackListener.onConnectionError("Failed to connect to MQTT broker");
+                }
             }
 
         } catch (MqttException e) {
