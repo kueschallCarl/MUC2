@@ -19,6 +19,7 @@ bool pub_flag = false;   // Flag to control publishing
 #define IC2_SDA 33   // Define I2C SDA pin
 #define I2C_SCL 32   // Define I2C SCL pin
 
+
 // Define WiFi credentials and MQTT broker details
 const char* ssid = "MaraudersMap";
 const char* password = "Page394%";
@@ -49,6 +50,12 @@ void blink() {
   delay(400);
   digitalWrite(led_green, LOW);
 }
+
+
+
+
+
+
 
 // Callback function for MQTT message received
 void onMqttMessageReceived(char* topic, byte* payload, unsigned int length) {
@@ -219,3 +226,7 @@ void loop() {
 
   mqttClient.loop();
 }
+
+
+
+
