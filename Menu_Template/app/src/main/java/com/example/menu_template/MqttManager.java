@@ -139,6 +139,8 @@ public class MqttManager {
             }
 
         } catch (MqttException e) {
+            Log.d("MqttManager", "Connect issue inside MqttManager");
+            Log.d("MqttManager", String.valueOf(e));
             e.printStackTrace();
             if (callbackListener != null) {
                 callbackListener.onConnectionError(e.getMessage());

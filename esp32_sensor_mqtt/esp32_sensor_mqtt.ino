@@ -113,6 +113,8 @@ void setupMqtt() {
       Serial.print("failed, retrying in 5 seconds...");
       delay(5000);
     }
+    mqttClient.loop();  // Added this line to handle incoming and outgoing messages
+
   }
 }
 
@@ -161,8 +163,12 @@ void setup() {
 }
 
 void loop() {
-  Serial.println(pub_flag);
-
+  if(pub_flag == true){
+    Serial.println("Pub_flag True");
+  }
+  else if(pub_flag == false){
+    Serial.println("Pub_flag False");
+  }
   static unsigned long previousTempMillis = 0;
   static char tempValue[8]; // Buffer to store temperature value
 
@@ -207,6 +213,7 @@ void loop() {
   if (pub_flag) {
     // Publish the list of sensor values
     mqttClient.publish(mpuTopic, sensorValues.c_str());
+    Serial.println("currently publishing");
 
     // Publish temperature value at regular intervals
     if (currentMillis - previousTempMillis >= interval) {
