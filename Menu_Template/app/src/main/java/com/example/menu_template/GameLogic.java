@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
+
+/**
+ * This class handles most of the game's logic, calculations and physics, and acts as a controller inside the project, directing requests to other classes.
+ */
 public class GameLogic implements MqttCallbackListener {
 
     public MqttManager mqttManager;
@@ -19,13 +23,13 @@ public class GameLogic implements MqttCallbackListener {
     public final ESPSteering espSteering;
     public final PhoneSteering phoneSteering;
     private SoundPlayer soundPlayer;
-    public int[][] labyrinth;
+    public int[][] labyrinth; //The 2D array representation of the labyrinth
 
-    private float temperature;
-    private int mais_count;
-    private boolean gameRunning;
-    private int playTime;
-    private int size = 10;
+    private float temperature; //the current temperature retrieved through the TEMP_TOPIC
+    private int mais_count; //the current amount of mais (corn) collected by the player
+    private boolean gameRunning; //a flag that determines if the game is currently running or not
+    private int playTime; //the current amount of time that has passed since the start of the game
+    private int size = 10; //the x,y size of the labyrinth
 
     private static final float MAX_ACCELEROMETER_RANGE = 9.81f; // Maximum range of accelerometer sensor (in m/s^2)
     private static final float MAX_GYROSCOPE_RANGE = 2000.0f; // Maximum range of gyroscope sensor (in degrees/second)
@@ -39,14 +43,19 @@ public class GameLogic implements MqttCallbackListener {
     private long lastUpdateTime; // Time of the last update
     private float[] highPassAcc = new float[3]; // High-pass filter output for accelerometer data
     private float[] gyroOrientation = new float[3];
-    private boolean isDirectionLocked = false;
-    private int lastValidDirection = -1;
-    private int currentDirection = -1;
+    private boolean isDirectionLocked = false; //a flag that determines if the playerObject should keep moving in the previous direction because of accelerometer and gyroscope data
+    private int lastValidDirection = -1; //stores the last valid direction the playerObject has been moved toward
+    private int currentDirection = -1; //stores the direction the playerObject is currently destined to be moved toward
 
 
     private Handler handler; // Handler to run code on the main thread
 
 
+    /**
+     * This constructor initializes all the necessary objects for later use and resets attributes if needed.
+     * @param context needs to be passed through the constructor, as some of the objects require it etc.
+     * @param settingsDatabase is passed through the constructor
+     */
     public GameLogic(Context context, SettingsDatabase settingsDatabase) {
         this.context = context;
         handler = new Handler();
@@ -80,8 +89,12 @@ public class GameLogic implements MqttCallbackListener {
     }
 
 
-
-
+        /**
+         * This method implements the onMessageReceived method of the MqttCallbackListener interface.
+         * It is supposed to handle message it receives on the subscribed topics.
+         * @param topic an MQTT topic
+         * @param message the message the MQTT topic published
+         */
         @Override
         public void onMessageReceived(String topic, String message) {
             if (topic.equals(Constants.TEMP_TOPIC)) {
@@ -90,6 +103,10 @@ public class GameLogic implements MqttCallbackListener {
             }
         }
 
+        /**
+         * This method implements the onConnectionLost method of the MqttCallbackListener interface.
+         * This method handles connectionLost errors
+         */
         @Override
         public void onConnectionLost() {
             // Show alert to the user
@@ -98,6 +115,10 @@ public class GameLogic implements MqttCallbackListener {
                     mqttManager.MQTT_BROKER_METHOD+"://"+mqttManager.MQTT_BROKER_IP+":"+mqttManager.MQTT_BROKER_PORT + "was lost.");
         }
 
+        /**
+         * This method implements the onConnectionError method of the MqttCallbackListener interface.
+         * This method handles Exceptions that occur when the client isn't able to connect to the broker
+         */
         @Override
         public void onConnectionError(String message) {
             // Handle connection error
@@ -107,6 +128,10 @@ public class GameLogic implements MqttCallbackListener {
         }
 
 
+    /**
+     *  This method converts message containing the temperature value as a String to a float
+      * @param message the message received on the TEMP_TOPIC containing the temperature value from the mpu6050 sensor
+     */
     public void parseTemperature(String message){
         this.temperature = Float.parseFloat(message);
         if(gameRunning){
@@ -114,22 +139,44 @@ public class GameLogic implements MqttCallbackListener {
         }
     }
 
+    /**
+     * This method sets the status of the game running.
+     * @param gameRunning the status of the game running
+     */
     public void setGameRunning(boolean gameRunning){
         this.gameRunning = gameRunning;
     }
 
+    /**
+     * This method retrieves the status of the game running.
+     * @return the status of the game running
+     */
     public boolean getGameRunning(){
         return gameRunning;
     }
 
+    /**
+     * This method retrieves the play time.
+     * @return the play time
+     */
     public int getPlayTime(){
         return playTime;
     }
 
+    /**
+     * This method retrieves the temperature.
+     * @return the temperature
+     */
     public float getTemperature(){
         return temperature;
     }
 
+    /**
+     * This method defines one 'step' of the GameLogic part of the game's loop.
+     * It gets the next player direction and moves the player (modifying the labyrinth accordingly)
+     * @param steeringType is either set to "ESP32" or "PHONE" and determines which steering method should be utilized for this step
+     * @return True if labyrinth is empty (winning condition), otherwise return False
+     */
     public boolean gameStep(String steeringType) {
         int playerDirection = getPlayerDirection(steeringType);
         Log.d("playerDirection", String.valueOf(playerDirection));
@@ -145,8 +192,12 @@ public class GameLogic implements MqttCallbackListener {
 
     }
 
+
+    /**
+     * This method gets all the accelerometer and gyro values from the ESPSteering object
+     * @return returns the accelerometer and gyro values from the ESPSteering object as an array of floats
+     */
     private float[] getValuesFromESPSensor() {
-        // Replace with your implementation of getting values from ESP steering
         float accX = espSteering.getAccX();
         float accY = espSteering.getAccY();
         float accZ = espSteering.getAccZ();
@@ -157,9 +208,11 @@ public class GameLogic implements MqttCallbackListener {
 
         return new float[]{accX, accY, accZ, gyroX, gyroY, gyroZ};
     }
-
+    /**
+     * This method gets all the accelerometer and gyro values from the PhoneSteering object
+     * @return returns the accelerometer and gyro values from the PhoneSteering object as an array of floats
+     */
     private float[] getValuesFromPhoneSensor() {
-        // Replace with your implementation of getting values from ESP steering
         float accX = phoneSteering.getAccX();
         float accY = phoneSteering.getAccY();
         float accZ = phoneSteering.getAccZ();
@@ -173,6 +226,12 @@ public class GameLogic implements MqttCallbackListener {
     }
 
 
+    /**
+     * This method takes in an array of floats containing the accelerometer and gyroscope values of the chosen steering method.
+     * It then calculates an appropriate direction the player object should move toward.
+     * @param sensorData contains accelerometer and gyro values from the chosen steering method
+     * @return a direction the player object should be moved toward
+     */
     private int parsePlayerDirection(float[] sensorData) {
         float accelerometerX = sensorData[0];
         float accelerometerY = sensorData[1];
@@ -273,6 +332,9 @@ public class GameLogic implements MqttCallbackListener {
         return lastValidDirection;
     }
 
+    /**
+     * This method resets the orientation of the accelerometer and gyroscope respectively
+     */
     private void resetOrientation() {
         highPassAcc[0] = 0.0f;
         highPassAcc[1] = 0.0f;
@@ -284,8 +346,11 @@ public class GameLogic implements MqttCallbackListener {
     }
 
 
-
-
+    /**
+     * This method takes the steering method into account and then executes the appropriate methods to get the next player direction
+     * @param steeringType the chosen steering method. Is either set to "ESP32" or "PHONE"
+     * @return the next direction the playerObject should be moved toward.
+     */
     public int getPlayerDirection(String steeringType){
         float[] sensor_data = new float[6];
         switch (steeringType) {
@@ -299,6 +364,10 @@ public class GameLogic implements MqttCallbackListener {
         return parsePlayerDirection(sensor_data);
     }
 
+    /**
+     * This method takes the chosen steering method into account and executes the appropriate startSensor() method of the equivalent object
+     * @param steeringType the chosen steering method. Is either set to "ESP32" or "PHONE"
+     */
     public void startSensors(String steeringType) {
         switch (steeringType) {
             case "ESP32":
@@ -313,7 +382,10 @@ public class GameLogic implements MqttCallbackListener {
                 Log.d("gameLoop", "Steering Type unknown " + steeringType);
         }
     }
-
+    /**
+     * This method takes the chosen steering method into account and executes the appropriate stopSensor() method of the equivalent object
+     * @param steeringType the chosen steering method. Is either set to "ESP32" or "PHONE"
+     */
     public void stopSensors(String steeringType) {
         switch (steeringType) {
             case "ESP32":
@@ -325,6 +397,15 @@ public class GameLogic implements MqttCallbackListener {
         }
     }
 
+    /**
+     * This method takes in the current 2D array representing the labyrinth, as well as the previously calculated direction the player should be moved toward.
+     * It then checks for multiple conditions, making sure that the position the player would occupy after moving in the direction isn't out of bounds or a wall.
+     * It also checks for mais (corn) objects and handles what happens when the player objects 'touches' them. And lastly it checks for the winning condition, which is currently met when
+     * the player is in the 'n4' neighborhood of the finish's position. This is to avoid the player having to aim for the exact position of the finish, which can be tricky at great speeds.
+     * @param labyrinth the current 2D array representing the labyrinth
+     * @param playerDirection the calculated direction the player should next be moved toward
+     * @return the 'redrawn' labyrinth with the player moved etc.
+     */
     public int[][] movePlayer(int[][] labyrinth, int playerDirection) {
         int playerX = -1;
         int playerY = -1;
@@ -427,6 +508,12 @@ public class GameLogic implements MqttCallbackListener {
         return labyrinth;
     }
 
+
+    /**
+     * This method checks if the 2D array representing the labyrinth is completely 'empty', meaning it is filled with zeros.
+     * @param labyrinth the current 2D array representing the labyrinth
+     * @return true if it is empty, false otherwise
+     */
     public boolean isLabyrinthEmpty(int[][] labyrinth) {
         for (int i = 0; i < labyrinth.length; i++) {
             for (int j = 0; j < labyrinth[i].length; j++) {
@@ -440,6 +527,15 @@ public class GameLogic implements MqttCallbackListener {
 
 
 
+    /**
+     * This method generates a labyrinth using a modified version of the depth-first search algorithm.
+     * The labyrinth is represented as a two-dimensional array of integers.
+     * The starting point is marked as 2 and the ending point is marked as 3.
+     * Walls are represented by 1, and empty spaces are represented by 0.
+     * The labyrinth is generated by removing walls between cells to create a maze structure.
+     * If the ending point does not have adjacent empty spaces, the labyrinth is regenerated.
+     * Once the labyrinth is generated, mais (corn) will be placed within it, represented as integers with values of six.
+     */
     private void generateLabyrinth() {
         this.labyrinth = new int[size][size];
 
@@ -489,15 +585,24 @@ public class GameLogic implements MqttCallbackListener {
                 stack.pop();
             }
         }
-                // Check if the end point has adjacent 0's, if not, regenerate the labyrinth
-                if (!hasAdjacentZeros(endX, endY)) {
-                    Log.d("Labyrinth", "Labyrinth before regen: " + Arrays.deepToString(this.labyrinth));
-                    generateLabyrinth();
-                }
-                //place Mais in the finished labyrinth
-                placeMais(labyrinth);
-            }
 
+        // Check if the end point has adjacent 0's, if not, regenerate the labyrinth
+        if (!hasAdjacentZeros(endX, endY)) {
+            Log.d("Labyrinth", "Labyrinth before regen: " + Arrays.deepToString(this.labyrinth));
+            generateLabyrinth();
+        }
+
+        // Place "Mais" in the finished labyrinth
+        placeMais(labyrinth);
+    }
+
+    /**
+     * This method checks if the specified cell at the given coordinates has adjacent empty spaces (0's).
+     * The generateLabyrinth method uses this method to make sure that the start and finish points are reachable.
+     * @param x the x-coordinate of the cell
+     * @param y the y-coordinate of the cell
+     * @return true if the cell has adjacent empty spaces, false otherwise
+     */
     private boolean hasAdjacentZeros(int x, int y) {
         // Check the four cardinal directions
         if (x > 0 && labyrinth[x - 1][y] == 0) {
@@ -516,7 +621,13 @@ public class GameLogic implements MqttCallbackListener {
         return false; // No adjacent 0's
     }
 
-
+    /**
+     * This method retrieves the list of unvisited neighbors of the specified cell at the given coordinates.
+     * @param x the x-coordinate of the cell
+     * @param y the y-coordinate of the cell
+     * @return the list of unvisited neighbors as an ArrayList of integer arrays,
+     *         where each array contains the x and y coordinates of a neighbor
+     */
     private List<int[]> getUnvisitedNeighbors(int x, int y) {
         List<int[]> unvisitedNeighbors = new ArrayList<>();
 
@@ -537,18 +648,31 @@ public class GameLogic implements MqttCallbackListener {
         return unvisitedNeighbors;
     }
 
+    /**
+     * This method generates a random integer between the specified minimum and maximum values.
+     * @param min the minimum value
+     * @param max the maximum value
+     * @return a random integer between the minimum and maximum values
+     */
     private int getRandomNumber(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min + 1) + min;
     }
 
 
+    /**
+     * This method randomly places a certain amount of mais (corn) throughout the empty spaces of the 2D array representing the labyrinth.
+     * The mais is represented by integers with values of six.
+     * @param labyrinth the current 2D array representing the labyrinth
+     */
     public void placeMais(int[][] labyrinth) {
         Random random = new Random();
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (labyrinth[i][j] == 0) {
+
+                    //this line determines the amount of mais inside the labyrinth
                     double chance = (35 - this.size) * 0.01;
                     if (random.nextDouble() < chance) {
                         labyrinth[i][j] = 6;
@@ -559,8 +683,14 @@ public class GameLogic implements MqttCallbackListener {
     }
 
 
-
+    /**
+     * This method allows this class to display an alert for the user/developer
+     * @param title the title of the alert
+     * @param message the message of the alert
+     */
     private void showAlert(String title, String message) {
+
+        //The handler makes sure to execute the method on the right thread
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -573,23 +703,42 @@ public class GameLogic implements MqttCallbackListener {
         });
     }
 
+    /**
+     * This method retrieves the ESP steering object.
+     * @return the ESP steering object
+     */
     public ESPSteering getEspSteering() {
         return espSteering;
     }
 
+    /**
+     * This method retrieves the phone steering object.
+     * @return the phone steering object
+     */
     public PhoneSteering getPhoneSteering() {
         return phoneSteering;
     }
 
+    /**
+     * This method retrieves the labyrinth as a 2D integer array.
+     * @return the labyrinth represented as a 2D integer array
+     */
     public int[][] getLabyrinth() {
         return labyrinth;
     }
 
+    /**
+     * This method disconnects all clients
+     */
     public void disconnectAllClients(){
         mqttManager.disconnect();
         espSteering.disconnect();
     }
 
+    /**
+     * This method retrieves the current amount of mais (corn) collected by the player
+     * @return the count of Mais
+     */
     public int getMaisCount() {
         return mais_count;
     }

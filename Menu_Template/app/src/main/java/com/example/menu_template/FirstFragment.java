@@ -21,6 +21,11 @@ import com.example.menu_template.databinding.FragmentFirstBinding;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * This class implements the Fragment framework and represents the View present when first opening the app.
+ * It mainly contains navigation logic, but it also defines the leaderboard RecyclerView
+ */
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
@@ -90,6 +95,12 @@ public class FirstFragment extends Fragment {
         });
     }
 
+
+    /**
+     * This method makes sure, that whenever the action_settings Element is clicked inside its MenuItem, the action_FirstFragment_to_SettingsFragment action is triggered.
+     * @param item The menu item that was selected.
+     * @return  True if the menu item selection was handled successfully, otherwise return False
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -122,6 +133,11 @@ public class FirstFragment extends Fragment {
     }
 
 
+    /**
+     * This method retrieves LeaderboardEntry objects from the leaderboardDatabase, which have been sorted by score.
+     * It creates DatabaseRow objects from that data and adds them to the rowDataList, which is then passed to the adapter.
+     * Then it it instantiates the RecyclerView and sets the adapter to the RecyclerView
+     */
     public void fillRecyclerView() {
         // Create a list of DatabaseRowSchema objects
         rowDataList = new ArrayList<>();

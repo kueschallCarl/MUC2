@@ -3,9 +3,17 @@ package com.example.menu_template;
 import android.content.Context;
 import android.media.MediaPlayer;
 
+/**
+ * This class provides the functionality to play sounds
+ */
 public class SoundPlayer {
     private MediaPlayer mediaPlayer;
 
+    /**
+     * This method plays the selected sound
+     * @param context of the file it is called in
+     * @param soundResourceId the id of the sound-effect file inside the project
+     */
     public void playSoundEffect(Context context, int soundResourceId) {
         stopSoundEffect(); // Stop any previously playing sound effect
 
@@ -21,6 +29,9 @@ public class SoundPlayer {
         mediaPlayer.start();
     }
 
+    /**
+     * This method stops the playing of a sound
+     */
     public void stopSoundEffect() {
         if (mediaPlayer != null) {
             mediaPlayer.release();

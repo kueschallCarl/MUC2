@@ -28,17 +28,41 @@ import com.example.menu_template.databinding.FragmentSettingsBinding;
 import java.util.Set;
 
 
+/**
+ * This Fragment is displayed whenever the user selects the MenuItem with the ID of "action_settings".
+ * It displays all the settings that the user is able to modify.
+ */
 public class SettingsFragment extends Fragment {
     private FragmentSettingsBinding binding;
     private MqttManager mqttManager;
     private String SteeringMethod;
     private SettingsDatabase settingsDatabase;
 
+
+    /**
+     * This method defines what should happen as the view is created.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the root of this Fragment's view
+     */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
+    /**
+     * This method defines what should happen once the view has been created
+     * It will immediately fill in the settings with the stored settings inside the SettingsDatabase
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -70,8 +94,6 @@ public class SettingsFragment extends Fragment {
         }
 
 
-
-
         // Get the singleton instance of MqttManager
         mqttManager = new MqttManager("settings_fragment");
 
@@ -99,7 +121,11 @@ public class SettingsFragment extends Fragment {
         checkSelectedSteeringMethod(settingsDatabase);
     }
 
-
+    /**
+     * This method defines what should happen as the Fragment itself is created.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,13 +134,23 @@ public class SettingsFragment extends Fragment {
     }
 
 
-
+    /**
+     * This method defines what should happen as the options menu is created
+     * @param menu The options menu in which you place your items.
+     * @param inflater inflates the menu
+     */
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    /**
+     * This method defines what should happen once a MenuItem inside the menu is selected
+     * @param item The menu item that was selected.
+     *
+     * @return True if the menu item selection was handled successfully, otherwise return False
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -129,6 +165,10 @@ public class SettingsFragment extends Fragment {
     }
 
 
+    /**
+     * This method simply checks which steering method's respective radio button is currently selected and stores that information in the SettingsDatabase
+     * @param settingsDatabase the SettingsDatabase object which contains the settings data
+     */
     private void checkSelectedSteeringMethod(SettingsDatabase settingsDatabase) {
         try {
             // Find the RadioGroup within the current fragment's view
@@ -166,12 +206,22 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    /**
+     * This method checks the SettingsDatabase for information on which steering method has been selected
+     * @param settingsDatabase the SettingsDatabase object which contains the settings data
+     * @return the chosen steering method. Can be either "ESP32" or "Phone"
+     */
     public String getSteeringMethod(SettingsDatabase settingsDatabase) {
         String steeringMethod = settingsDatabase.getSetting(SettingsDatabase.COLUMN_STEERING_METHOD);
         Log.d("Database", "Retrieved steering method: " + steeringMethod);
         return steeringMethod;
     }
 
+    /**
+     * This method allows this class to display an alert for the user/developer
+     * @param title the title of the alert
+     * @param message the message of the alert
+     */
     private void showAlert(String title, String message) {
         if (getContext() != null) {
             new AlertDialog.Builder(getContext())
@@ -182,6 +232,9 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    /**
+     * This method defines what should happen whenever this Fragment's view is destroyed
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

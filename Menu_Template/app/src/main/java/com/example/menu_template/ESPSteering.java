@@ -36,24 +36,45 @@ public class ESPSteering implements MqttCallbackListener{
     private SettingsDatabase settingsDatabase;
     public ESPSteering(Context context) {
         this.context = context;
+        //initialize MqttManager object, to manage Mqtt functions inside this class
         this.mqttManager = new MqttManager("esp_steering");
+        //initialize SettingsDatabase object, to get access to the SettingsDatabase
         this.settingsDatabase = SettingsDatabase.getInstance(context);
+
+        //connect to broker
         mqttManager.connect(settingsDatabase, "esp_steering");
+        //set this class as a CallbackListener for the mqttManager with the "esp_steering" id
         mqttManager.setCallbackListener(this);
+        //subscribe to the mpuTopic to start receiving mpu6050 data on the mqttManager
         mqttManager.subscribeToTopic(Constants.MPU_TOPIC);
     }
 
 
+    /**
+     * This method tells the mqttManager instance of this class to subscribe to the mpuTopic
+     * so that this class starts to receive the mpu6050 data
+     */
     public void startSensors() {
         mqttManager.subscribeToTopic(Constants.MPU_TOPIC);
     }
 
+    /**
+     * This method tells the mqttManager instance of this class to unsubscribe to the mpuTopic
+     * so that this class stops receiving the mpu6050 data
+     */
     public void stopSensors() {
         mqttManager.unsubscribeFromTopic(Constants.MPU_TOPIC);
 
     }
 
-        @Override
+
+    /**
+     * This method implements the onMessageReceived method of the MqttCallbackListener interface.
+     * It is supposed to handle message it receives on the subscribed topics.
+     * @param topic an MQTT topic
+     * @param message the message the MQTT topic published
+     */
+    @Override
         public void onMessageReceived(String topic, String message) {
             if (topic.equals(Constants.MPU_TOPIC)) {
                 parseAndAssignValues(message);
@@ -61,25 +82,34 @@ public class ESPSteering implements MqttCallbackListener{
             }
         }
 
-        @Override
+    /**
+     * This method implements the onConnectionLost method of the MqttCallbackListener interface.
+     * This method handles connectionLost errors
+      */
+    @Override
         public void onConnectionLost() {
             // Show alert to the user
             Log.d("MqttManager", "Connection lost in ESPSteering");
             showAlert("Connection Lost", "The MQTT connection to "+
                     mqttManager.MQTT_BROKER_METHOD+"://"+mqttManager.MQTT_BROKER_IP+":"+mqttManager.MQTT_BROKER_PORT + "was lost.");
         }
+    /**
+     * This method implements the onConnectionError method of the MqttCallbackListener interface.
+     * This method handles Exceptions that occur when the client isn't able to connect to the broker
+     */
+    @Override
+    public void onConnectionError(String message) {
+        // Handle connection error
+        // Show alert to the user with the error message
+        showAlert("Connection Error", "Failed to connect to the MQTT broker at: " +
+                mqttManager.MQTT_BROKER_METHOD+"://"+mqttManager.MQTT_BROKER_IP+":"+mqttManager.MQTT_BROKER_PORT);
+    }
 
-        @Override
-        public void onConnectionError(String message) {
-            // Handle connection error
-            // Show alert to the user with the error message
-            showAlert("Connection Error", "Failed to connect to the MQTT broker at: " +
-                    mqttManager.MQTT_BROKER_METHOD+"://"+mqttManager.MQTT_BROKER_IP+":"+mqttManager.MQTT_BROKER_PORT);
-        }
 
-
-
-
+    /**
+     * This method takes in the String published on the mpuTopic and converts it into the corresponding values.
+     * @param message the message received on the mpuTopic
+     */
     private void parseAndAssignValues(String message) {
         String[] values = message.replaceAll("[()]", "").split(",");
         if (values.length == 6) {
@@ -102,6 +132,11 @@ public class ESPSteering implements MqttCallbackListener{
     }
 
 
+    /**
+     * This method allows this class to display an alert for the user/developer
+     * @param title the title of the alert
+     * @param message the message of the alert
+     */
     private void showAlert(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title)
@@ -110,30 +145,58 @@ public class ESPSteering implements MqttCallbackListener{
                 .show();
     }
 
+
+    /**
+     This method retrieves the X-axis value for acceleration.
+     @return The X-axis value for acceleration.
+     */
     public float getAccX() {
         return acc_x;
     }
 
+    /**
+     This method retrieves the Y-axis value for acceleration.
+     @return The Y-axis value for acceleration.
+     */
     public float getAccY() {
         return acc_y;
     }
 
+    /**
+     This method retrieves the Z-axis value for acceleration.
+     @return The Z-axis value for acceleration.
+     */
     public float getAccZ() {
         return acc_z;
     }
 
+    /**
+     This method retrieves the X-axis value for gyroscope.
+     @return The X-axis value for gyroscope.
+     */
     public float getGyroX() {
         return gyro_x;
     }
 
+    /**
+     This method retrieves the Y-axis value for gyroscope.
+     @return The Y-axis value for gyroscope.
+     */
     public float getGyroY() {
         return gyro_y;
     }
 
+    /**
+     This method retrieves the Z-axis value for gyroscope.
+     @return The Z-axis value for gyroscope.
+     */
     public float getGyroZ() {
         return gyro_z;
     }
 
+    /**
+     * This method disconnects this class' mqttManager client from the broker
+     */
     public void disconnect(){
         mqttManager.disconnect();
     }

@@ -35,7 +35,7 @@ public class MqttManager {
     }
 
     /**
-     * Publishes a message to a topic
+     * This method publishes a message to a topic
      *
      * @param message the message to publish
      */
@@ -50,7 +50,7 @@ public class MqttManager {
     }
 
     /**
-     * Subscribes to a topic
+     * This method subscribes to a topic
      *
      * @param topic the topic to subscribe
      */
@@ -83,7 +83,7 @@ public class MqttManager {
             mqttClient.setCallback(new MqttCallback() {
 
                 /**
-                 * Handles connection-loss
+                 * This method handles connection-loss
                  *
                  * @param cause the reason behind the loss of connection.
                  */
@@ -111,8 +111,7 @@ public class MqttManager {
 
 
                 /**
-                 * Handles delivery status information
-                 *
+                 * This method handles delivery status information
                  * @param token the delivery token associated with the message. Provides information about the delivery status.
                  */
                 @Override
@@ -145,7 +144,7 @@ public class MqttManager {
     }
 
     /**
-     * Handles disconnecting from the broker
+     * This method handles disconnecting from the broker
      */
     public void disconnect() {
         try {

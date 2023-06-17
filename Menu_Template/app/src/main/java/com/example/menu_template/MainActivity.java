@@ -18,13 +18,17 @@ import com.example.menu_template.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * This class acts as the main activity of the android application.
+ * It mainly coordinates other artifacts.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
     /**
-     * Called when the activity is starting
+     * This method called when the activity is starting
      * This method overrides what should happen upon its own creation
      * @param savedInstanceState If the activity is being re-initialized after
      *     previously being shut down then this Bundle contains the data it most
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Inflates (shows) everything inside the 'menu' component in menu_main.xml (in this case the 'Settings' component)
+     * This method inflates (shows) everything inside the 'menu' component in menu_main.xml (in this case the 'Settings' component)
      * @param menu The options menu in which you place your items.
      * @return true
      */
@@ -62,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Handles action bar item clicks
+     * This method handles action bar item clicks
      * @param item The menu item that was selected.
      *
      * @return true or handled by parent class
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Handles navigation actions for the navigation bar etc.
+     * This method handles navigation actions for the navigation bar etc.
      * @return  result of the NavigationUI.navigateUp if successful. Result of super.onSupportNavigateUp() if unsuccessful
      */
     @Override

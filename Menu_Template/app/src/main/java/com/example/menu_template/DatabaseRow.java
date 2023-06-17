@@ -1,5 +1,8 @@
 package com.example.menu_template;
 
+/**
+ * This class provides the template for a row inside the leaderboard RecyclerView
+ */
 public class DatabaseRow {
     private int id;
     private String playerName;
@@ -16,6 +19,10 @@ public class DatabaseRow {
         this.rowData = playerName + "   |   " + time + "   |   " + maisCount + "   |   " + score;
     }
 
+    /**
+     * This method returns the full String for one row inside the leaderboard RecyclerView
+     * @return RecyclerView row
+     */
     public String getRowData(){
         return rowData;
     }

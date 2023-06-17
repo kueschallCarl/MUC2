@@ -7,6 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * SettingsDatabase class for managing the settings data in a SQLite database.
+ * This class provides functionality to create, update, and retrieve settings data.
+ */
 public class SettingsDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "settings_database";
     private static final int DATABASE_VERSION = 1;
@@ -21,11 +25,20 @@ public class SettingsDatabase extends SQLiteOpenHelper {
     private static SettingsDatabase instance = null;
     private Context mContext;
 
+    /**
+     * Constructs a new SettingsDatabase instance with the specified context.
+     * @param context the context to be used for accessing the database
+     */
     private SettingsDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
     }
 
+    /**
+     * This method returns the singleton instance of SettingsDatabase.
+     * @param context the context to be used for accessing the database
+     * @return the singleton instance of SettingsDatabase
+     */
     public static SettingsDatabase getInstance(Context context) {
         if (instance == null) {
             instance = new SettingsDatabase(context.getApplicationContext());
@@ -44,15 +57,16 @@ public class SettingsDatabase extends SQLiteOpenHelper {
         db.execSQL(createTableQuery);
     }
 
-
-
-
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Handle database upgrades if needed
     }
 
+    /**
+     * This method saves a setting in the database.
+     * @param setting the value of the setting to be saved
+     * @param column  the name of the column to which the setting should be saved
+     */
     public void saveSetting(String setting, String column) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -61,6 +75,12 @@ public class SettingsDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * This method updates the last saved setting in the database.
+     * If there are no existing settings, a new setting is saved.
+     * @param setting the value of the setting to be updated or saved
+     * @param column  the name of the column to which the setting should be updated or saved
+     */
     public void updateLastSetting(String setting, String column) {
         SQLiteDatabase db = getWritableDatabase();
         String countQuery = "SELECT COUNT(*) FROM " + TABLE_NAME;
@@ -81,7 +101,11 @@ public class SettingsDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-
+    /**
+     * This method retrieves the last saved setting from the database for the specified column.
+     * @param columnName the name of the column from which to retrieve the setting
+     * @return the value of the last saved setting for the specified column, or null if not found
+     */
     public String getSetting(String columnName) {
         SQLiteDatabase db = getReadableDatabase();
         String selectQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1";
@@ -101,9 +125,11 @@ public class SettingsDatabase extends SQLiteOpenHelper {
         return setting;
     }
 
-
+    /**
+     * This method returns the context associated with this SettingsDatabase.
+     * @return the context associated with this SettingsDatabase
+     */
     public Context getContext() {
         return mContext;
     }
 }
-

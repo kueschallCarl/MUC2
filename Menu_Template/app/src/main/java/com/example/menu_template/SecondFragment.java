@@ -21,6 +21,9 @@ import com.example.menu_template.databinding.FragmentSecondBinding;
 
 import java.util.Arrays;
 
+/**
+ * This Fragment is displayed when starting the game and thus handles all the preparation and executions associated with running the game itself.
+ */
 public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
@@ -34,12 +37,30 @@ public class SecondFragment extends Fragment {
     private Thread gameThread;
     private LeaderboardDatabase leaderboardDatabase;
 
+    /**
+     * This method defines what should happen as the view is being created
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the root of this fragment's view
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSecondBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
+    /**
+     * This method defines what should happen once the view has been created
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.soundPlayer = new SoundPlayer();
@@ -58,9 +79,15 @@ public class SecondFragment extends Fragment {
         startGameLoop(steeringMethod);
     }
 
+    /**
+     * This method starts the game-loop
+     * @param steeringMethod the chosen steering method. Can be set to either "ESP32" or "Phone"
+     */
     public void startGameLoop(String steeringMethod) {
         gameLogic.setGameRunning(true);
         gameLogic.startSensors(steeringMethod);
+
+        //Use separate thread to run the loop on
         gameThread = new Thread(() -> {
             while (!Thread.interrupted()) {
                 float temperature = gameLogic.getTemperature();
@@ -69,8 +96,10 @@ public class SecondFragment extends Fragment {
                 updateTemperatureAndPlayTime(temperature, play_time);
 
                 win_condition = gameLogic.gameStep(steeringMethod);
+                //redraw the labyrinth after the player has been moved
                 drawLabyrinth(gameLogic.labyrinth);
                 if (win_condition) {
+                    //everything that should happen once the player wins
                     soundPlayer.playSoundEffect(requireContext(), R.raw.win_sound);
                     gameLogic.mqttManager.publishToTopic("1",Constants.FINISHED_TOPIC);
                     gameLogic.setGameRunning(false);
@@ -78,6 +107,7 @@ public class SecondFragment extends Fragment {
                     break;
                 }
 
+                //This part of the code defines the speed of the game in this case
                 try {
                     Thread.sleep(40); // Add a 100ms delay
                 } catch (InterruptedException e) {
@@ -90,6 +120,9 @@ public class SecondFragment extends Fragment {
     }
 
 
+    /**
+     * This method stores the leaderboard-related values once the game has been won.
+     */
     public void saveScore(){
         String name = settingsDatabase.getSetting("name");
         int play_time = gameLogic.getPlayTime();
@@ -108,6 +141,11 @@ public class SecondFragment extends Fragment {
 
     }
 
+    /**
+     * This method updates the temperature and play-time in every loop of the game-loop.
+     * @param temperature the current temperature stored inside the gameLogic object.
+     * @param play_time the current play-time value, stored inside the gameLogic object.
+     */
     private void updateTemperatureAndPlayTime(float temperature, int play_time) {
         requireActivity().runOnUiThread(() -> {
             if (binding != null) {
@@ -123,8 +161,10 @@ public class SecondFragment extends Fragment {
     }
 
 
-
-
+    /**
+     * This method simply visualizes the 2D array representing the labyrinth
+     * @param labyrinth the current 2D array representing the laybrinth, stored inside the gameLogic object
+     */
     public void drawLabyrinth(int[][] labyrinth) {
         Log.d("labyrinth in draw labyrinth", Arrays.deepToString(labyrinth));
         int cellSize = 50;
@@ -183,6 +223,11 @@ public class SecondFragment extends Fragment {
         });
     }
 
+    /**
+     * This method allows this class to display an alert for the user/developer
+     * @param title the title of the alert
+     * @param message the message of the alert
+     */
     private void showAlert(String title, String message) {
         requireActivity().runOnUiThread(() -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -193,6 +238,11 @@ public class SecondFragment extends Fragment {
         });
     }
 
+
+    /**
+     * This method defines what should happen whenever the Fragment's view is destroyed.
+     * It makes sure to stop and join threads, disconnect clients from the broker and stop sensors.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
