@@ -161,6 +161,7 @@ void setup() {
 }
 
 void loop() {
+  Serial.println("pub_flag: ");
   Serial.println(pub_flag);
 
   static unsigned long previousTempMillis = 0;
