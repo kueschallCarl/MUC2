@@ -29,7 +29,8 @@ public class SecondFragment extends Fragment {
     private FragmentSecondBinding binding;
     private GameLogic gameLogic;
     private String steeringMethod;
-    private SoundPlayer soundPlayer;
+    private SoundPlayer soundPlayer1;
+    private SoundPlayer soundPlayer2;
     private SettingsDatabase settingsDatabase;
     private boolean win_condition = false;
     private ImageView labyrinthImageView;
@@ -63,7 +64,8 @@ public class SecondFragment extends Fragment {
      */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.soundPlayer = new SoundPlayer();
+        this.soundPlayer1 = new SoundPlayer();
+        this.soundPlayer2 = new SoundPlayer();
         fragmentView = view;
 
         SettingsFragment settingsFragment = new SettingsFragment();
@@ -88,7 +90,6 @@ public class SecondFragment extends Fragment {
         gameLogic.startSensors(steeringMethod);
 
         if(Boolean.parseBoolean(settingsDatabase.getSetting(SettingsDatabase.COLUMN_AUDIO))) {
-            SoundPlayer soundPlayer2 = new SoundPlayer();
             soundPlayer2.playSoundEffect(requireContext(), R.raw.background_track);
         }
 
@@ -104,9 +105,12 @@ public class SecondFragment extends Fragment {
                 //redraw the labyrinth after the player has been moved
                 drawLabyrinth(gameLogic.labyrinth);
                 if (win_condition) {
+                    if(Boolean.parseBoolean(settingsDatabase.getSetting(SettingsDatabase.COLUMN_AUDIO))) {
+                        soundPlayer2.stopSoundEffect();
+                    }
                     //everything that should happen once the player wins
                     if(Boolean.parseBoolean(settingsDatabase.getSetting(SettingsDatabase.COLUMN_AUDIO))) {
-                        soundPlayer.playSoundEffect(requireContext(), R.raw.win_sound);
+                        soundPlayer1.playSoundEffect(requireContext(), R.raw.win_sound);
                     }
                     gameLogic.mqttManager.publishToTopic("1",Constants.FINISHED_TOPIC);
                     gameLogic.setGameRunning(false);
@@ -252,6 +256,9 @@ public class SecondFragment extends Fragment {
      */
     @Override
     public void onDestroyView() {
+        if(Boolean.parseBoolean(settingsDatabase.getSetting(SettingsDatabase.COLUMN_AUDIO))) {
+            soundPlayer2.stopSoundEffect();
+        }
         super.onDestroyView();
         gameLogic.disconnectAllClients();
         binding = null;
