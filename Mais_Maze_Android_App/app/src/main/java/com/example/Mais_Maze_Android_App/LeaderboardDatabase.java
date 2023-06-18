@@ -19,8 +19,8 @@ public class LeaderboardDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "leaderboards_database";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String TABLE_NAME = "leaderboard";
-    private static final String COLUMN_ID = "id";
+    public static final String TABLE_NAME = "leaderboard";
+    public static final String COLUMN_ID = "id";
     public static final String COLUMN_PLAYER_NAME = "name";
     public static final String COLUMN_TIME = "time";
     public static final String COLUMN_SCORE = "score";
@@ -33,7 +33,7 @@ public class LeaderboardDatabase extends SQLiteOpenHelper {
      * This method constructs a new `LeaderboardDatabase` object.
      * @param context the context used to create the database
      */
-    private LeaderboardDatabase(Context context) {
+    LeaderboardDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
     }

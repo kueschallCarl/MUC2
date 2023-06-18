@@ -15,9 +15,9 @@ public class MqttManager {
     public String MQTT_BROKER_METHOD = "tcp";
     private static String MQTT_CLIENT_ID = "mosquitto_id";
     private static final String MPU_TOPIC = "mpu/K05";
-    private MqttClient mqttClient;
+    public MqttClient mqttClient;
     private String clientId;
-    private MqttCallbackListener callbackListener;
+    public MqttCallbackListener callbackListener;
 
     public MqttManager(String clientId) {
         MQTT_CLIENT_ID = clientId;

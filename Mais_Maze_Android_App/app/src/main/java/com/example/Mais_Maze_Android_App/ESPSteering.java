@@ -9,7 +9,7 @@ import android.util.Log;
  */
 public class ESPSteering implements MqttCallbackListener{
 
-    private MqttManager mqttManager;
+    public MqttManager mqttManager;
     private Context context;
     private float acc_x;
     private float acc_y;
@@ -95,7 +95,7 @@ public class ESPSteering implements MqttCallbackListener{
      * This method takes in the String published on the mpuTopic and converts it into the corresponding values.
      * @param message the message received on the mpuTopic
      */
-    private void parseAndAssignValues(String message) {
+    public void parseAndAssignValues(String message) {
         String[] values = message.replaceAll("[()]", "").split(",");
         if (values.length == 6) {
             try {
@@ -122,7 +122,7 @@ public class ESPSteering implements MqttCallbackListener{
      * @param title the title of the alert
      * @param message the message of the alert
      */
-    private void showAlert(String title, String message) {
+    public void showAlert(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title)
                 .setMessage(message)

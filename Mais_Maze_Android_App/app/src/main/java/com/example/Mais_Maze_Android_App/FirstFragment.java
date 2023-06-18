@@ -28,11 +28,11 @@ import java.util.List;
  */
 public class FirstFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
-    private MqttManager mqttManager;
-    private SettingsDatabase settingsDatabase;
+    public FragmentFirstBinding binding;
+    public MqttManager mqttManager;
+    public SettingsDatabase settingsDatabase;
     private RecyclerView recyclerView;
-    private LeaderboardDatabase leaderboardDatabase;
+    public LeaderboardDatabase leaderboardDatabase;
 
     private MyAdapter adapter;
     private List<DatabaseRow> rowDataList;

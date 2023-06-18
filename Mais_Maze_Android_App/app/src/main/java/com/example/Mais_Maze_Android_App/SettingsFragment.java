@@ -1,4 +1,5 @@
 package com.example.Mais_Maze_Android_App;
+
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,8 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.Mais_Maze_Android_App.databinding.FragmentFirstBinding;
-import com.example.Mais_Maze_Android_App.databinding.FragmentSecondBinding;
 import com.example.Mais_Maze_Android_App.databinding.FragmentSettingsBinding;
 
 
@@ -26,10 +25,10 @@ import com.example.Mais_Maze_Android_App.databinding.FragmentSettingsBinding;
  * It displays all the settings that the user is able to modify.
  */
 public class SettingsFragment extends Fragment {
-    private FragmentSettingsBinding binding;
+    public FragmentSettingsBinding binding;
     private MqttManager mqttManager;
     private String SteeringMethod;
-    private SettingsDatabase settingsDatabase;
+    public SettingsDatabase settingsDatabase;
 
 
     /**
@@ -179,7 +178,7 @@ public class SettingsFragment extends Fragment {
      * This method simply checks which steering method's respective radio button is currently selected and stores that information in the SettingsDatabase
      * @param settingsDatabase the SettingsDatabase object which contains the settings data
      */
-    private void checkSelectedSteeringMethod(SettingsDatabase settingsDatabase) {
+    public void checkSelectedSteeringMethod(SettingsDatabase settingsDatabase) {
         try {
             // Find the RadioGroup within the current fragment's view
             RadioGroup radioGroup = getView().findViewById(R.id.radio_btn_group_steering_method);
@@ -232,7 +231,7 @@ public class SettingsFragment extends Fragment {
      * @param title the title of the alert
      * @param message the message of the alert
      */
-    private void showAlert(String title, String message) {
+    public void showAlert(String title, String message) {
         if (getContext() != null) {
             new AlertDialog.Builder(getContext())
                     .setTitle(title)

@@ -30,7 +30,7 @@ public class SettingsDatabase extends SQLiteOpenHelper {
      * Constructs a new SettingsDatabase instance with the specified context.
      * @param context the context to be used for accessing the database
      */
-    private SettingsDatabase(Context context) {
+    public SettingsDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
     }

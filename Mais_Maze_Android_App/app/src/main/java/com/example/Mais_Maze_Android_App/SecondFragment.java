@@ -1,6 +1,7 @@
 package com.example.Mais_Maze_Android_App;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,18 +21,21 @@ import androidx.fragment.app.Fragment;
 import com.example.Mais_Maze_Android_App.databinding.FragmentSecondBinding;
 
 import java.util.Arrays;
+import java.util.concurrent.Callable;
 
 /**
  * This Fragment is displayed when starting the game and thus handles all the preparation and executions associated with running the game itself.
  */
 public class SecondFragment extends Fragment {
 
+    public Callable<Context> requireContext;
+    public Runnable requireActivity;
     private FragmentSecondBinding binding;
-    private GameLogic gameLogic;
+    public GameLogic gameLogic;
     private String steeringMethod;
-    private SoundPlayer soundPlayer1;
+    public SoundPlayer soundPlayer1;
     private SoundPlayer soundPlayer2;
-    private SettingsDatabase settingsDatabase;
+    public SettingsDatabase settingsDatabase;
     private boolean win_condition = false;
     private ImageView labyrinthImageView;
     private View fragmentView;
@@ -239,7 +243,7 @@ public class SecondFragment extends Fragment {
      * @param title the title of the alert
      * @param message the message of the alert
      */
-    private void showAlert(String title, String message) {
+    public void showAlert(String title, String message) {
         requireActivity().runOnUiThread(() -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(title)
