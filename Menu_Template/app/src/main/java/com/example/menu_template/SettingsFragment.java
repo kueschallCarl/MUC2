@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -70,8 +71,21 @@ public class SettingsFragment extends Fragment {
         RadioGroup radioGroup = binding.radioBtnGroupSteeringMethod;
         EditText sizeSettingEditText = binding.sizeSetting;
         EditText brokerIPEditText = binding.brokerAddressTextField;
+        Switch audioSwitch = binding.audioSwitch;
 
         this.settingsDatabase = SettingsDatabase.getInstance(requireContext());
+
+        try{
+            String audioSetting = settingsDatabase.getSetting(SettingsDatabase.COLUMN_AUDIO);
+            // Convert audioSetting to a boolean
+            boolean isAudioEnabled = Boolean.parseBoolean(audioSetting);
+
+            // Set the state of the switch
+            audioSwitch.setChecked(isAudioEnabled);
+        }
+        catch(Exception e){
+            Log.d("AudioSwitch", "Failed to retrieve audio setting from the database: " + e);
+        }
 
         try {
             String radioButtonSelection = settingsDatabase.getSetting(SettingsDatabase.COLUMN_STEERING_METHOD);
@@ -103,9 +117,13 @@ public class SettingsFragment extends Fragment {
             public void onClick(View v) {
                 String brokerIP = binding.brokerAddressTextField.getText().toString();
                 String labyrinth_size = binding.sizeSetting.getText().toString();
+                boolean isAudioEnabled = binding.audioSwitch.isChecked();
+
                 mqttManager.MQTT_BROKER_IP = brokerIP;
                 settingsDatabase.updateLastSetting(brokerIP, SettingsDatabase.COLUMN_BROKER_IP);
                 settingsDatabase.updateLastSetting(labyrinth_size, SettingsDatabase.COLUMN_LABYRINTH_SIZE);
+                settingsDatabase.updateLastSetting(String.valueOf(isAudioEnabled), SettingsDatabase.COLUMN_AUDIO);
+
                 Log.d("MqttManager", "brokerIP: " + mqttManager.MQTT_BROKER_IP);
             }
         });

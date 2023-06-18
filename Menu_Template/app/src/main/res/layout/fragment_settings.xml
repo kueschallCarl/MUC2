@@ -70,10 +70,10 @@
         android:ems="10"
         android:inputType="text"
         android:text="@string/size_setting_default"
-        app:layout_constraintBottom_toTopOf="@+id/button_save_settings"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radio_btn_group_steering_method"
-        app:layout_constraintVertical_bias="0.363" />
+        app:layout_constraintVertical_bias="0.072" />
 
     <RadioGroup
         android:id="@+id/radio_btn_group_steering_method"
@@ -104,9 +104,21 @@
         android:text="@string/button_save_settings_label"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.962"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radio_btn_group_steering_method"
-        app:layout_constraintVertical_bias="0.325" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.777" />
+
+    <Switch
+        android:id="@+id/audio_switch"
+        android:layout_width="121dp"
+        android:layout_height="74dp"
+        android:text="@string/audio_switch_label"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.888"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.619" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

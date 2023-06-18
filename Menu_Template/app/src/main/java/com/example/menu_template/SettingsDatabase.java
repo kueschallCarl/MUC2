@@ -21,6 +21,7 @@ public class SettingsDatabase extends SQLiteOpenHelper {
     public static final String COLUMN_BROKER_IP = "broker_ip";
     public static final String COLUMN_LABYRINTH_SIZE = "labyrinth_size";
     public static final String COLUMN_PLAYER_NAME = "name";
+    public static final String COLUMN_AUDIO = "audio";
 
     private static SettingsDatabase instance = null;
     private Context mContext;
@@ -53,6 +54,7 @@ public class SettingsDatabase extends SQLiteOpenHelper {
                 COLUMN_PLAYER_NAME + " TEXT, " +
                 COLUMN_STEERING_METHOD + " TEXT, " +
                 COLUMN_BROKER_IP + " TEXT, " +
+                COLUMN_AUDIO + " TEXT, " +
                 COLUMN_LABYRINTH_SIZE + " TEXT)";
         db.execSQL(createTableQuery);
     }
