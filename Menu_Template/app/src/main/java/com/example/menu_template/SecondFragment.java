@@ -87,6 +87,11 @@ public class SecondFragment extends Fragment {
         gameLogic.setGameRunning(true);
         gameLogic.startSensors(steeringMethod);
 
+        if(Boolean.parseBoolean(settingsDatabase.getSetting(SettingsDatabase.COLUMN_AUDIO))) {
+            SoundPlayer soundPlayer2 = new SoundPlayer();
+            soundPlayer2.playSoundEffect(requireContext(), R.raw.background_track);
+        }
+
         //Use separate thread to run the loop on
         gameThread = new Thread(() -> {
             while (!Thread.interrupted()) {
@@ -100,7 +105,9 @@ public class SecondFragment extends Fragment {
                 drawLabyrinth(gameLogic.labyrinth);
                 if (win_condition) {
                     //everything that should happen once the player wins
-                    soundPlayer.playSoundEffect(requireContext(), R.raw.win_sound);
+                    if(Boolean.parseBoolean(settingsDatabase.getSetting(SettingsDatabase.COLUMN_AUDIO))) {
+                        soundPlayer.playSoundEffect(requireContext(), R.raw.win_sound);
+                    }
                     gameLogic.mqttManager.publishToTopic("1",Constants.FINISHED_TOPIC);
                     gameLogic.setGameRunning(false);
                     saveScore();

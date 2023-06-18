@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.Stack;
 
 
@@ -483,7 +484,9 @@ public class GameLogic implements MqttCallbackListener {
         if (labyrinth[newPlayerX][newPlayerY] == 6) {
             // Player cannot move to a wall
             Log.d("Mais", "Mais collected at: "+ "[" + newPlayerX + "]"+ "," + "[" + newPlayerY + "]");
-            soundPlayer.playSoundEffect(context, R.raw.mais_pickup_sound);
+            if(Boolean.parseBoolean(settingsDatabase.getSetting(SettingsDatabase.COLUMN_AUDIO))){
+                soundPlayer.playSoundEffect(context, R.raw.mais_pickup_sound);
+            }
             this.mais_count += 1;
         }
 
