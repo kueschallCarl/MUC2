@@ -4,7 +4,7 @@
     android:id="@+id/constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SecondFragment">
+    tools:context="com.K05.Mais_Maze_Android_App.SecondFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
