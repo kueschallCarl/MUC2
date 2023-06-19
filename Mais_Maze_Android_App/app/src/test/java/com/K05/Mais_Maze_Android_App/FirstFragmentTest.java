@@ -34,7 +34,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
-
+/**
+ * This class provides unit-tests for the FirstFragment Fragment
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ MqttManager.class })
 public class FirstFragmentTest {
@@ -64,7 +66,10 @@ public class FirstFragmentTest {
     private AlertDialog mockAlertDialog;
 
     private FirstFragment firstFragment;
+    /**
 
+     Set up method that initializes the necessary dependencies and mocks for the tests.
+     */
     @Before
     public void setUp() {
         firstFragment = new FirstFragment();
@@ -73,7 +78,12 @@ public class FirstFragmentTest {
         firstFragment.settingsDatabase = mockSettingsDatabase;
         firstFragment.leaderboardDatabase = mockLeaderboardDatabase;
     }
+    /**
 
+     Test case for the onCreate method of the FirstFragment class.
+
+     @throws Exception if an exception occurs during the test
+     */
     @Test
     public void testOnCreateView() throws Exception {
         when(mockBinding.getRoot()).thenReturn((ConstraintLayout) mockView);
@@ -85,7 +95,10 @@ public class FirstFragmentTest {
         FragmentFirstBinding.inflate(any(), any(), anyBoolean());
         LeaderboardDatabase.getInstance(any(Context.class));
     }
+    /**
 
+     Test case for the onViewCreated method of the FirstFragment class.
+     */
     @Test
     public void testOnViewCreated() {
         when(mockBinding.nameTextField).thenReturn(mockNameTextField);
@@ -100,7 +113,12 @@ public class FirstFragmentTest {
         verify(mockSettingsDatabase).updateLastSetting(eq("Test Name"), eq(SettingsDatabase.COLUMN_PLAYER_NAME));
         verify(mockView).findViewById(R.id.recyclerView);
     }
+    /**
 
+     Test case for the onOptionsItemSelected method of the FirstFragment class.
+
+     The action is Settings, which should navigate to the SettingsFragment.
+     */
     @Test
     public void testOnOptionsItemSelected_SettingsActionNavigatesToSettingsFragment() {
         when(mockLeaderboardDatabase.getEntriesSortedByScore()).thenReturn(new ArrayList<>());
@@ -116,7 +134,11 @@ public class FirstFragmentTest {
         verify(mockNavController).navigate(eq(R.id.action_FirstFragment_to_SettingsFragment), any(), any(NavOptions.class));
         verify(mockNavController, never()).navigate(eq(R.id.action_FirstFragment_to_SecondFragment), any());
     }
+    /**
 
+     Test case for the onOptionsItemSelected method of the FirstFragment class.
+     The action is not Settings, so no navigation should occur.
+     */
     @Test
     public void testOnOptionsItemSelected_OtherActionDoesNotNavigate() {
         NavController mockNavController = Mockito.mock(NavController.class);

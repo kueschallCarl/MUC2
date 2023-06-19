@@ -22,18 +22,20 @@ import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-/**
- * will execute on the development machine (host).
- *
- */
 
+/**
+ * This class provides unit-tests for the ESPSteering class
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Log.class)
 public class ESPSteeringTest {
     private ESPSteering espSteering;
     private MqttManager mqttManager;
     private Context context;
+    /**
 
+     Set up method that initializes the necessary dependencies and mocks for the tests.
+     */
     @Before
     public void setUp() {
         context = Mockito.mock(Context.class);
@@ -41,26 +43,46 @@ public class ESPSteeringTest {
         espSteering = new ESPSteering(context);
         espSteering.mqttManager = mqttManager;
     }
+    /**
 
+     Tear down method that cleans up the objects after each test.
+     */
     @After
     public void tearDown() {
         espSteering = null;
         mqttManager = null;
         context = null;
     }
+    /**
 
+     Test case for the startSensors method of the ESPSteering class.
+
+     Verifies that the method subscribes to the MPU topic.
+     */
     @Test
     public void testStartSensors_SubscribesToMpuTopic() {
         espSteering.startSensors();
         verify(mqttManager).subscribeToTopic(Constants.MPU_TOPIC);
     }
+    /**
 
+     Test case for the stopSensors method of the ESPSteering class.
+
+     Verifies that the method unsubscribes from the MPU topic.
+     */
     @Test
     public void testStopSensors_UnsubscribesFromMpuTopic() {
         espSteering.stopSensors();
         verify(mqttManager).unsubscribeFromTopic(Constants.MPU_TOPIC);
     }
+    /**
 
+     Test case for the onMessageReceived method of the ESPSteering class
+
+     with the MPU topic. Verifies that the method calls parseAndAssignValues
+
+     with the correct message and logs the message.
+     */
     @Test
     public void testOnMessageReceived_WithMpuTopic_CallsParseAndAssignValues() {
         String topic = Constants.MPU_TOPIC;
@@ -75,7 +97,14 @@ public class ESPSteeringTest {
         verifyStatic(Log.class, times(1));
         Log.d(eq("mpu/K05 in ESPSteering"), eq(message));
     }
+    /**
 
+     Test case for the onMessageReceived method of the ESPSteering class
+
+     with a different topic. Verifies that the method does not call
+
+     parseAndAssignValues and does not log the message.
+     */
     @Test
     public void testOnMessageReceived_WithDifferentTopic_DoesNotCallParseAndAssignValues() {
         String topic = "other_topic";
@@ -90,7 +119,12 @@ public class ESPSteeringTest {
         verifyStatic(Log.class, never());
         Log.d(eq("mpu/K05 in ESPSteering"), anyString());
     }
+    /**
 
+     Test case for the onConnectionLost method of the ESPSteering class.
+
+     Verifies that the method shows an alert with the correct parameters.
+     */
     @Test
     public void testOnConnectionLost_ShowsAlert() {
         espSteering.onConnectionLost();
@@ -100,7 +134,12 @@ public class ESPSteeringTest {
                 "The MQTT connection to " + mqttManager.MQTT_BROKER_METHOD +
                         "://" + mqttManager.MQTT_BROKER_IP + ":" + mqttManager.MQTT_BROKER_PORT + "was lost.");
     }
+    /**
 
+     Test case for the onConnectionError method of the ESPSteering class.
+
+     Verifies that the method shows an alert with the correct parameters.
+     */
     @Test
     public void testOnConnectionError_ShowsAlert() {
         String errorMessage = "Failed to connect";
@@ -113,7 +152,12 @@ public class ESPSteeringTest {
                         mqttManager.MQTT_BROKER_METHOD + "://" + mqttManager.MQTT_BROKER_IP +
                         ":" + mqttManager.MQTT_BROKER_PORT);
     }
+    /**
 
+     Test case for the parseAndAssignValues method of the ESPSteering class.
+
+     Verifies that the method correctly parses and assigns the values from the message.
+     */
     @Test
     public void testParseAndAssignValues_ParsesAndAssignsValues() {
         String message = "1.23,4.56,7.89,0.12,3.45,6.78";
@@ -128,7 +172,14 @@ public class ESPSteeringTest {
         assertEquals(3.45f, espSteering.getGyroY(), 0.001);
         assertEquals(6.78f, espSteering.getGyroZ(), 0.001);
     }
+    /**
 
+     Test case for the parseAndAssignValues method of the ESPSteering class
+
+     with an invalid number of values in the message. Verifies that the
+
+     method logs an error message.
+     */
     @Test
     public void testParseAndAssignValues_InvalidNumberOfValues_LogsError() {
         String message = "1.23,4.56,7.89,0.12,3.45";
@@ -140,6 +191,11 @@ public class ESPSteeringTest {
         Log.d(eq("NumberOfValues"), eq("Invalid number of values: " + 5));
     }
 
+    /**
+
+     Test case for the showAlert method of the ESPSteering class.
+     Verifies that the method displays an alert dialog with the correct parameters.
+     */
     @Test
     public void testShowAlert_DisplaysAlertDialog() {
         AlertDialog.Builder builder = Mockito.mock(AlertDialog.Builder.class);

@@ -20,7 +20,9 @@ import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
+/**
+ * This class provides unit-tests for the SecondFragment Fragment
+ */
 public class SecondFragmentTest {
     @Mock
     private GameLogic gameLogic;
@@ -34,7 +36,9 @@ public class SecondFragmentTest {
     private LeaderboardDatabase leaderboardDatabase;
 
     private SecondFragment fragment;
-
+    /**
+     * Set up method to initialize the test environment before each test case.
+     */
     @Before
     public void setUp() {
         Context context = ApplicationProvider.getApplicationContext();
@@ -45,12 +49,18 @@ public class SecondFragmentTest {
         fragment.requireContext = () -> context;
         fragment.requireActivity = () -> Mockito.mock(Fragment.class);
     }
-
+    /**
+     * Tear down method to clean up the test environment after each test case.
+     */
     @After
     public void tearDown() {
         fragment = null;
     }
-
+    /**
+     * Test case for the `startGameLoop` method in `SecondFragment`.
+     *
+     * @throws InterruptedException if an interruption occurs during the test.
+     */
     @Test
     public void testStartGameLoop() throws InterruptedException {
         when(settingsDatabase.getSetting(SettingsDatabase.COLUMN_AUDIO)).thenReturn("true");
@@ -65,7 +75,9 @@ public class SecondFragmentTest {
         verify(gameLogic).setGameRunning(false);
         verify(soundPlayer1).playSoundEffect(any(Context.class), eq(R.raw.win_sound));
     }
-
+    /**
+     * Test case for the `saveScore` method in `SecondFragment`.
+     */
     @Test
     public void testSaveScore() {
         when(settingsDatabase.getSetting("name")).thenReturn("John");

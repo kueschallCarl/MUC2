@@ -18,7 +18,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
-
+/**
+ * This class provides unit-tests for the GameLogic class
+ */
 public class GameLogicTest {
 
     @Mock
@@ -35,13 +37,22 @@ public class GameLogicTest {
 
     private GameLogic gameLogic;
 
+    /**
 
+     Set up method that initializes the test environment for GameLogic testing.
+     It creates instances of GameLogic using the mock objects for Context and SettingsDatabase.
+     */
     @Before
     public void setup() {
         MockitoAnnotations.openMocks(this);
         gameLogic = new GameLogic(mockContext, mockSettingsDatabase);
     }
+    /**
 
+     Test case for the onMessageReceived() method in GameLogic.
+
+     It verifies that the temperature and play time values are updated correctly based on the received message.
+     */
     @Test
     public void testOnMessageReceived() {
         String topic = Constants.TEMP_TOPIC;
@@ -52,7 +63,12 @@ public class GameLogicTest {
         assertEquals(25.0f, gameLogic.getTemperature(), 0.01f);
         assertEquals(1, gameLogic.getPlayTime());
     }
+    /**
 
+     Test case for the parseTemperature() method in GameLogic.
+
+     It tests different scenarios of parsing temperature strings and verifies the resulting temperature and play time values.
+     */
     @Test
     public void testParseTemperature() {
         GameLogic gameLogic = new GameLogic(mockContext, mockSettingsDatabase);
@@ -79,7 +95,12 @@ public class GameLogicTest {
         assertEquals(27.8f, gameLogic.getTemperature(), 0.01f);
         assertEquals(1, gameLogic.getPlayTime());
     }
+    /**
 
+     Test case for the getValuesFromESPSensor() method in GameLogic.
+
+     It verifies that the accelerometer and gyroscope values are retrieved correctly from the ESP sensor.
+     */
     @Test
     public void testGetValuesFromESPSensor() {
         float accX = 0.5f;
@@ -107,7 +128,12 @@ public class GameLogicTest {
         verify(mockEspSteering, times(1)).getGyroY();
         verify(mockEspSteering, times(1)).getGyroZ();
     }
+    /**
 
+     Test case for the getValuesFromPhoneSensor() method in GameLogic.
+
+     It verifies that the accelerometer and gyroscope values are retrieved correctly from the phone sensor.
+     */
     @Test
     public void testGetValuesFromPhoneSensor() {
         float accX = 0.3f;
@@ -135,7 +161,11 @@ public class GameLogicTest {
         verify(mockPhoneSteering, times(1)).getGyroY();
         verify(mockPhoneSteering, times(1)).getGyroZ();
     }
+    /**
 
+     Test case for the parsePlayerDirection() method in GameLogic.
+     It verifies that the player direction is correctly determined based on the sensor data.
+     */
     @Test
     public void testParsePlayerDirection() {
         float[] sensorData = {0.5f, -0.3f, 0.1f, 0.2f, -0.4f, 0.6f};
@@ -143,7 +173,12 @@ public class GameLogicTest {
         int actualDirection = gameLogic.parsePlayerDirection(sensorData);
         assertEquals(expectedDirection, actualDirection);
     }
+    /**
 
+     Test case for the startSensors() method in GameLogic.
+
+     It verifies that the appropriate sensor is started based on the given steering type.
+     */
     @Test
     public void testStartSensors() {
         String steeringType = "ESP32";
@@ -161,7 +196,12 @@ public class GameLogicTest {
         verify(mockEspSteering, never()).startSensors();
         verify(mockPhoneSteering, never()).startSensors();
     }
+    /**
 
+     Test case for the stopSensors() method in GameLogic.
+
+     It verifies that the appropriate sensor is stopped based on the given steering type.
+     */
     @Test
     public void testStopSensors() {
         String steeringType = "ESP32";
@@ -179,7 +219,11 @@ public class GameLogicTest {
         verify(mockEspSteering, never()).stopSensors();
         verify(mockPhoneSteering, never()).stopSensors();
     }
+    /**
 
+     Test case for the movePlayer() method in GameLogic when the player is not found in the labyrinth.
+     It verifies that the labyrinth remains unchanged.
+     */
     @Test
     public void testMovePlayer_PlayerNotFound() {
         int[][] labyrinth = {
@@ -197,7 +241,11 @@ public class GameLogicTest {
         int[][] result = gameLogic.movePlayer(labyrinth, playerDirection);
         assertArrayEquals(expectedLabyrinth, result);
     }
+    /**
 
+     Test case for the movePlayer() method in GameLogic when an invalid direction is provided.
+     It verifies that the labyrinth remains unchanged.
+     */
     @Test
     public void testMovePlayer_InvalidDirection() {
         int[][] labyrinth = {
@@ -215,7 +263,11 @@ public class GameLogicTest {
         int[][] result = gameLogic.movePlayer(labyrinth, playerDirection);
         assertArrayEquals(expectedLabyrinth, result);
     }
+    /**
 
+     Test case for the movePlayer() method in GameLogic when the player goes out of bounds.
+     It verifies that the labyrinth remains unchanged.
+     */
     @Test
     public void testMovePlayer_OutOfBounds() {
         int[][] labyrinth = {
@@ -233,7 +285,11 @@ public class GameLogicTest {
         int[][] result = gameLogic.movePlayer(labyrinth, playerDirection);
         assertArrayEquals(expectedLabyrinth, result);
     }
+    /**
 
+     Test case for the movePlayer() method in GameLogic when the player hits a wall.
+     It verifies that the labyrinth remains unchanged.
+     */
     @Test
     public void testMovePlayer_HitsWall() {
         int[][] labyrinth = {
@@ -251,7 +307,11 @@ public class GameLogicTest {
         int[][] result = gameLogic.movePlayer(labyrinth, playerDirection);
         assertArrayEquals(expectedLabyrinth, result);
     }
+    /**
 
+     Test case for the movePlayer() method in GameLogic when the player collects a maze item.
+     It verifies that the labyrinth is updated correctly with the collected item.
+     */
     @Test
     public void testMovePlayer_MaisCollected() {
         int[][] labyrinth = {
@@ -269,7 +329,11 @@ public class GameLogicTest {
         int[][] result = gameLogic.movePlayer(labyrinth, playerDirection);
         assertArrayEquals(expectedLabyrinth, result);
     }
+    /**
 
+     Test case for the movePlayer() method in GameLogic when the player reaches the victory position.
+     It verifies that the labyrinth is updated correctly and the game is won.
+     */
     @Test
     public void testMovePlayer_Victory() {
         int[][] labyrinth = {{1, 1, 1},
@@ -285,7 +349,11 @@ public class GameLogicTest {
     int[][] result = gameLogic.movePlayer(labyrinth, playerDirection);
     assertArrayEquals(expectedLabyrinth, result);
 }
+    /**
 
+     Test case for the movePlayer() method in GameLogic when the player performs a normal move.
+     It verifies that the labyrinth is updated correctly with the player's new position.
+     */
     @Test
     public void testMovePlayer_NormalMove() {
         int[][] labyrinth = {
@@ -303,7 +371,11 @@ public class GameLogicTest {
         int[][] result = gameLogic.movePlayer(labyrinth, playerDirection);
         assertArrayEquals(expectedLabyrinth, result);
     }
+    /**
 
+     Test case for the isLabyrinthEmpty() method in GameLogic when the labyrinth is empty.
+     It verifies that the method correctly identifies an empty labyrinth.
+     */
     @Test
     public void testIsLabyrinthEmpty_EmptyLabyrinth() {
         int[][] labyrinth = {
@@ -315,7 +387,11 @@ public class GameLogicTest {
         boolean result = gameLogic.isLabyrinthEmpty(labyrinth);
         assertTrue(result);
     }
+    /**
 
+     Test case for the isLabyrinthEmpty() method in GameLogic when the labyrinth is non-empty.
+     It verifies that the method correctly identifies a non-empty labyrinth.
+     */
     @Test
     public void testIsLabyrinthEmpty_NonEmptyLabyrinth() {
         int[][] labyrinth = {
@@ -327,7 +403,14 @@ public class GameLogicTest {
         boolean result = gameLogic.isLabyrinthEmpty(labyrinth);
         assertFalse(result);
     }
+    /**
 
+     Test case for the generateLabyrinth() method in GameLogic when a valid labyrinth is generated.
+
+     It verifies that the generated labyrinth has the correct dimensions, starting point, and ending point.
+
+     Additionally, more assertions can be added to check the structure of the labyrinth.
+     */
     @Test
     public void testGenerateLabyrinth_ValidLabyrinth() {
         gameLogic = new GameLogic(mockContext, mockSettingsDatabase); // Create a GameLogic instance with a size of 5
@@ -358,7 +441,12 @@ public class GameLogicTest {
 
         // TODO: Add more assertions to check the labyrinth structure
     }
+    /**
 
+     Test case for the hasAdjacentZeros() method in GameLogic when there are adjacent zeros at the given position.
+
+     It verifies that the method correctly identifies the existence of adjacent zeros.
+     */
     @Test
     public void testHasAdjacentZeros_AdjacentZerosExist() {
         gameLogic = new GameLogic(mockContext, mockSettingsDatabase); // Create a GameLogic instance with a size of 5
@@ -374,7 +462,12 @@ public class GameLogicTest {
         boolean result = gameLogic.hasAdjacentZeros(2, 2);
         assertTrue(result);
     }
+    /**
 
+     Test case for the hasAdjacentZeros() method in GameLogic when there are no adjacent zeros at the given position.
+
+     It verifies that the method correctly identifies the absence of adjacent zeros.
+     */
     @Test
     public void testHasAdjacentZeros_AdjacentZerosDoNotExist() {
         gameLogic = new GameLogic(mockContext, mockSettingsDatabase); // Create a GameLogic instance with a size of 5
@@ -390,7 +483,14 @@ public class GameLogicTest {
         boolean result = gameLogic.hasAdjacentZeros(2, 2);
         assertFalse(result);
     }
+    /**
 
+     Test case for the getUnvisitedNeighbors() method in GameLogic when there are unvisited neighbors at the given position.
+
+     It verifies that the method correctly returns the list of unvisited neighbors.
+
+     Additionally, assertions can be added to check the coordinates of the unvisited neighbors.
+     */
     @Test
     public void testGetUnvisitedNeighbors_HasUnvisitedNeighbors() {
         gameLogic = new GameLogic(mockContext, mockSettingsDatabase); // Create a GameLogic instance with a size of 5
@@ -408,7 +508,12 @@ public class GameLogicTest {
 
         // TODO: Add assertions to check the coordinates of the unvisited neighbors
     }
+    /**
 
+     Test case for the getUnvisitedNeighbors() method in GameLogic when there are no unvisited neighbors at the given position.
+
+     It verifies that the method correctly returns an empty list.
+     */
     @Test
     public void testGetUnvisitedNeighbors_NoUnvisitedNeighbors() {
         gameLogic = new GameLogic(mockContext, mockSettingsDatabase); // Create a GameLogic instance with a size of 5
@@ -424,7 +529,12 @@ public class GameLogicTest {
         List<int[]> unvisitedNeighbors = gameLogic.getUnvisitedNeighbors(2, 2);
         assertEquals(0, unvisitedNeighbors.size());
     }
+    /**
 
+     Test case for the getRandomNumber() method in GameLogic when generating a random number within a valid range.
+
+     It verifies that the generated random number falls within the specified range.
+     */
     @Test
     public void testGetRandomNumber_ValidRange() {
         gameLogic = new GameLogic(mockContext, mockSettingsDatabase); // Create a GameLogic instance with a size of 5

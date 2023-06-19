@@ -37,7 +37,9 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-
+/**
+ * This class provides unit-tests for the SettingsFragment Fragment
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class SettingsFragmentTest {
     @Mock
@@ -59,7 +61,9 @@ public class SettingsFragmentTest {
     private Switch mockSwitch;
 
     private SettingsFragment settingsFragment;
-
+    /**
+     * Set up method to initialize test environment before each test case.
+     */
     @Before
     public void setUp() {
         settingsFragment = Mockito.spy(new SettingsFragment());
@@ -71,7 +75,9 @@ public class SettingsFragmentTest {
         when(mockBinding.radioBtnGroupSteeringMethod).thenReturn(mockRadioGroup);
         when(mockBinding.audioSwitch).thenReturn(mockSwitch);
     }
-
+    /**
+     * Test case for `onCreateView` method in `SettingsFragment`.
+     */
     @Test
     public void testOnCreateView() {
         LayoutInflater mockInflater = mock(LayoutInflater.class);
@@ -84,7 +90,9 @@ public class SettingsFragmentTest {
 
         assertEquals(mockRootView, result);
     }
-
+    /**
+     * Test case for `onViewCreated` method in `SettingsFragment` when valid settings are present.
+     */
     @Test
     public void testOnViewCreated_withValidSettings() {
         EditText mockSizeSettingEditText = mock(EditText.class);
@@ -105,7 +113,9 @@ public class SettingsFragmentTest {
         verify(mockBrokerIPEditText).setText(eq("192.168.1.1"));
         verify(mockRadioGroup).check(ArgumentMatchers.eq(R.id.radio_btn_esp32_steering));
     }
-
+    /**
+     * Test case for `onViewCreated` method in `SettingsFragment` when invalid settings are present.
+     */
     @Test
     public void testOnViewCreated_withInvalidSettings() {
         when(mockSettingsDatabase.getSetting(anyString())).thenThrow(new RuntimeException("Database error"));
@@ -121,7 +131,9 @@ public class SettingsFragmentTest {
         verify(settingsFragment).showAlert(eq("AudioSwitch"), anyString());
         verify(settingsFragment).showAlert(eq("Settings"), anyString());
     }
-
+    /**
+     * Test case for `onCreateOptionsMenu` method in `SettingsFragment`.
+     */
     @Test
     public void testOnCreateOptionsMenu() {
         Menu mockMenu = mock(Menu.class);
@@ -132,7 +144,9 @@ public class SettingsFragmentTest {
         verify(mockMenuInflater).inflate(eq(R.menu.menu_main), eq(mockMenu));
     }
 
-
+    /**
+     * Test case for `onOptionsItemSelected` method in `SettingsFragment` when selecting an item other than the specified one.
+     */
     @Test
     public void testOnOptionsItemSelected_withOtherItem() {
         MenuItem mockMenuItem = mock(MenuItem.class);
@@ -143,7 +157,9 @@ public class SettingsFragmentTest {
 
         assertFalse(result);
     }
-
+    /**
+     * Test case for `checkSelectedSteeringMethod` method in `SettingsFragment` when ESP32 steering method is selected.
+     */
     @Test
     public void testCheckSelectedSteeringMethod_withESP32() {
         int esp32RadioButtonId = R.id.radio_btn_esp32_steering;
@@ -154,7 +170,9 @@ public class SettingsFragmentTest {
         verify(mockSettingsDatabase).updateLastSetting(eq("ESP32"), eq(SettingsDatabase.COLUMN_STEERING_METHOD));
         verify(settingsFragment).showAlert(eq("SteeringMethod"), eq("Selected steering method: ESP32"));
     }
-
+    /**
+     * Test case for `checkSelectedSteeringMethod` method in `SettingsFragment` when phone steering method is selected.
+     */
     @Test
     public void testCheckSelectedSteeringMethod_withPhone() {
         int phoneRadioButtonId = R.id.radio_btn_phone_steering;
@@ -165,7 +183,9 @@ public class SettingsFragmentTest {
         verify(mockSettingsDatabase).updateLastSetting(eq("Phone"), eq(SettingsDatabase.COLUMN_STEERING_METHOD));
         verify(settingsFragment).showAlert(eq("SteeringMethod"), eq("Selected steering method: Phone"));
     }
-
+    /**
+     * Test case for `checkSelectedSteeringMethod` method in `SettingsFragment` when no steering method is selected.
+     */
     @Test
     public void testCheckSelectedSteeringMethod_withNoSelection() {
         when(mockRadioGroup.getCheckedRadioButtonId()).thenReturn(-1);
@@ -175,7 +195,9 @@ public class SettingsFragmentTest {
         verify(mockSettingsDatabase, never()).updateLastSetting(anyString(), eq(SettingsDatabase.COLUMN_STEERING_METHOD));
         verify(settingsFragment).showAlert(eq("SteeringMethod"), eq("No SteeringMethod selected"));
     }
-
+    /**
+     * Test case for `checkSelectedSteeringMethod` method in `SettingsFragment` when an exception occurs while retrieving the selected steering method.
+     */
     @Test
     public void testCheckSelectedSteeringMethod_withException() {
         when(mockRadioGroup.getCheckedRadioButtonId()).thenThrow(new RuntimeException("Radio button error"));
@@ -185,7 +207,9 @@ public class SettingsFragmentTest {
         verify(mockSettingsDatabase, never()).updateLastSetting(anyString(), eq(SettingsDatabase.COLUMN_STEERING_METHOD));
         verify(settingsFragment).showAlert(eq("Radio Button Issue"), eq("No Steering Method selected in Settings"));
     }
-
+    /**
+     * Test case for `getSteeringMethod` method in `SettingsFragment`.
+     */
     @Test
     public void testGetSteeringMethod() {
         when(mockSettingsDatabase.getSetting(eq(SettingsDatabase.COLUMN_STEERING_METHOD))).thenReturn("ESP32");
@@ -195,7 +219,9 @@ public class SettingsFragmentTest {
         assertEquals("ESP32", result);
         verify(mockSettingsDatabase).getSetting(eq(SettingsDatabase.COLUMN_STEERING_METHOD));
     }
-
+    /**
+     * Test case for `getSteeringMethod` method in `SettingsFragment` when an exception occurs while retrieving the steering method.
+     */
     @Test
     public void testGetSteeringMethod_withException() {
         when(mockSettingsDatabase.getSetting(anyString())).thenThrow(new RuntimeException("Database error"));
@@ -205,7 +231,9 @@ public class SettingsFragmentTest {
         assertNull(result);
         verify(mockSettingsDatabase).getSetting(eq(SettingsDatabase.COLUMN_STEERING_METHOD));
     }
-
+    /**
+     * Test case for `showAlert` method in `SettingsFragment`.
+     */
     @Test
     public void testShowAlert() {
         Context mockContext = mock(Context.class);
@@ -225,7 +253,9 @@ public class SettingsFragmentTest {
         verify(mockBuilder).setPositiveButton(eq("OK"), isNull());
         verify(mockBuilder).show();
     }
-
+    /**
+     * Test case for `onDestroyView` method in `SettingsFragment`.
+     */
     @Test
     public void testOnDestroyView() {
         settingsFragment.onDestroyView();

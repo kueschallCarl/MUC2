@@ -19,11 +19,15 @@ import androidx.test.core.app.ApplicationProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
+/**
+ * This class provides unit-tests for the SettingsDatabase class
+ */
 public class SettingsDatabaseTest {
     private SettingsDatabase settingsDatabase;
     private SQLiteDatabase mockDatabase;
-
+    /**
+     * Set up method to initialize the test environment before each test case.
+     */
     @Before
     public void setUp() {
         Context context = ApplicationProvider.getApplicationContext();
@@ -41,14 +45,18 @@ public class SettingsDatabaseTest {
         mockDatabase = mock(SQLiteDatabase.class);
         settingsDatabase.onCreate(mockDatabase);
     }
-
+    /**
+     * Tear down method to clean up the test environment after each test case.
+     */
     @After
     public void tearDown() {
         settingsDatabase.onUpgrade(mockDatabase, 1, 1);
         settingsDatabase = null;
         mockDatabase = null;
     }
-
+    /**
+     * Test case for the `saveSetting` method in `SettingsDatabase`.
+     */
     @Test
     public void testSaveSetting() {
         ContentValues expectedValues = new ContentValues();
@@ -59,7 +67,9 @@ public class SettingsDatabaseTest {
         verify(mockDatabase).insert(eq("settings"), eq(null), eq(expectedValues));
         verify(mockDatabase).close();
     }
-
+    /**
+     * Test case for the `updateLastSetting` method in `SettingsDatabase` when existing settings are present.
+     */
     @Test
     public void testUpdateLastSetting_existingSettings() {
         Cursor mockCursor = mock(Cursor.class);
@@ -76,7 +86,9 @@ public class SettingsDatabaseTest {
         verify(mockDatabase).update(eq("settings"), eq(expectedValues), anyString(), eq(null));
         verify(mockDatabase).close();
     }
-
+    /**
+     * Test case for the `updateLastSetting` method in `SettingsDatabase` when no existing settings are present.
+     */
     @Test
     public void testUpdateLastSetting_noExistingSettings() {
         Cursor mockCursor = mock(Cursor.class);
@@ -93,7 +105,9 @@ public class SettingsDatabaseTest {
         verify(mockDatabase).insert(eq("settings"), eq(null), eq(expectedValues));
         verify(mockDatabase).close();
     }
-
+    /**
+     * Test case for the `getSetting` method in `SettingsDatabase` when the column exists.
+     */
     @Test
     public void testGetSetting_existingColumn() {
         Cursor mockCursor = mock(Cursor.class);
@@ -108,7 +122,9 @@ public class SettingsDatabaseTest {
         verify(mockCursor).close();
         verify(mockDatabase).close();
     }
-
+    /**
+     * Test case for the `getSetting` method in `SettingsDatabase` when the column does not exist.
+     */
     @Test
     public void testGetSetting_nonExistingColumn() {
         Cursor mockCursor = mock(Cursor.class);
