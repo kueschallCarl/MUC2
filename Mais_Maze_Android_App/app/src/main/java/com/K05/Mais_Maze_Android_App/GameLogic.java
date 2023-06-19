@@ -200,7 +200,7 @@ public class GameLogic implements MqttCallbackListener {
      * This method gets all the accelerometer and gyro values from the ESPSteering object
      * @return returns the accelerometer and gyro values from the ESPSteering object as an array of floats
      */
-    private float[] getValuesFromESPSensor() {
+    public float[] getValuesFromESPSensor() {
         float accX = espSteering.getAccX();
         float accY = espSteering.getAccY();
         float accZ = espSteering.getAccZ();
@@ -215,7 +215,7 @@ public class GameLogic implements MqttCallbackListener {
      * This method gets all the accelerometer and gyro values from the PhoneSteering object
      * @return returns the accelerometer and gyro values from the PhoneSteering object as an array of floats
      */
-    private float[] getValuesFromPhoneSensor() {
+    public float[] getValuesFromPhoneSensor() {
         float accX = phoneSteering.getAccX();
         float accY = phoneSteering.getAccY();
         float accZ = phoneSteering.getAccZ();
@@ -235,7 +235,7 @@ public class GameLogic implements MqttCallbackListener {
      * @param sensorData contains accelerometer and gyro values from the chosen steering method
      * @return a direction the player object should be moved toward
      */
-    private int parsePlayerDirection(float[] sensorData) {
+    public int parsePlayerDirection(float[] sensorData) {
         float accelerometerX = sensorData[0];
         float accelerometerY = sensorData[1];
         float accelerometerZ = sensorData[2];
@@ -541,7 +541,7 @@ public class GameLogic implements MqttCallbackListener {
      * If the ending point does not have adjacent empty spaces, the labyrinth is regenerated.
      * Once the labyrinth is generated, mais (corn) will be placed within it, represented as integers with values of six.
      */
-    private void generateLabyrinth() {
+    public void generateLabyrinth() {
         this.labyrinth = new int[size][size];
 
         // Set all cells as walls
@@ -608,7 +608,7 @@ public class GameLogic implements MqttCallbackListener {
      * @param y the y-coordinate of the cell
      * @return true if the cell has adjacent empty spaces, false otherwise
      */
-    private boolean hasAdjacentZeros(int x, int y) {
+    public boolean hasAdjacentZeros(int x, int y) {
         // Check the four cardinal directions
         if (x > 0 && labyrinth[x - 1][y] == 0) {
             return true; // There is a 0 to the north
@@ -633,7 +633,7 @@ public class GameLogic implements MqttCallbackListener {
      * @return the list of unvisited neighbors as an ArrayList of integer arrays,
      *         where each array contains the x and y coordinates of a neighbor
      */
-    private List<int[]> getUnvisitedNeighbors(int x, int y) {
+    public List<int[]> getUnvisitedNeighbors(int x, int y) {
         List<int[]> unvisitedNeighbors = new ArrayList<>();
 
         // Check the four cardinal directions
@@ -659,7 +659,7 @@ public class GameLogic implements MqttCallbackListener {
      * @param max the maximum value
      * @return a random integer between the minimum and maximum values
      */
-    private int getRandomNumber(int min, int max) {
+    public int getRandomNumber(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min + 1) + min;
     }
@@ -746,5 +746,9 @@ public class GameLogic implements MqttCallbackListener {
      */
     public int getMaisCount() {
         return mais_count;
+    }
+
+    public void setLabyrinth(int[][] labyrinth) {
+        this.labyrinth = labyrinth;
     }
 }
