@@ -678,7 +678,7 @@ public class GameLogic implements MqttCallbackListener {
                 if (labyrinth[i][j] == 0) {
 
                     //this line determines the amount of mais inside the labyrinth
-                    double chance = (35 - this.size) * 0.01;
+                    double chance = 0.1;
                     if (random.nextDouble() < chance) {
                         labyrinth[i][j] = 6;
                     }
