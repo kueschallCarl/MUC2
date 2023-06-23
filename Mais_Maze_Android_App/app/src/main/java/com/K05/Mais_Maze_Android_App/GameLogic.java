@@ -188,11 +188,9 @@ public class GameLogic implements MqttCallbackListener {
         if (isLabyrinthEmpty(labyrinth)) {
             return true;
         }
-
         else{
             return false;
         }
-
     }
 
 
